@@ -1,7 +1,9 @@
 <?php
+date_default_timezone_set('Asia/Jakarta');
+
 include 'config/connection.php';
 include 'classes/DB.php';
-$database = new Database();
+include 'classes/Menu.php';
 ?>
 <!doctype html>
 <html lang="en">
@@ -21,8 +23,11 @@ $database = new Database();
     <link href="assets/css/bootstrap-extended.css" rel="stylesheet" />
     <link href="assets/css/style.css" rel="stylesheet" />
     <link href="assets/css/icons.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link href="assets/css/fonts-google.css" rel="stylesheet">
+    <link href="assets/css/bootstrap-icons.css" rel="stylesheet">
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css"> -->
+    <!-- jquery -->
+    <script src="assets/js/jquery.min.js"></script>
 
     <!-- loader-->
     <link href="assets/css/pace.min.css" rel="stylesheet" />
@@ -47,7 +52,7 @@ $database = new Database();
                             <a class="nav-link dropdown-toggle dropdown-toggle-nocaret" href="#" data-bs-toggle="dropdown">
                                 <div class="notifications">
                                     <span class="notify-badge">8</span>
-                                    <i class="bi bi-bell-fill"></i>
+                                    <i class="bx bx-bell fs-4"></i>
                                 </div>
                             </a>
                             <div class="dropdown-menu dropdown-menu-end p-0">
@@ -57,7 +62,7 @@ $database = new Database();
                                 <div class="header-notifications-list p-2">
                                     <a class="dropdown-item" href="#">
                                         <div class="d-flex align-items-center">
-                                            <div class="notification-box bg-light-primary text-primary"><i class="bi bi-basket2-fill"></i></div>
+                                            <div class="notification-box bg-light-primary text-primary"><i class="bx bx-cart-alt fs-4"></i></div>
                                             <div class="ms-3 flex-grow-1">
                                                 <h6 class="mb-0 dropdown-msg-user">New Orders <span class="msg-time float-end text-secondary">1 m</span></h6>
                                                 <small class="mb-0 dropdown-msg-text text-secondary d-flex align-items-center">You have recived new orders</small>
@@ -120,7 +125,7 @@ $database = new Database();
                     <img src="assets/images/logo-icon.png" class="logo-icon" alt="logo icon">
                 </div>
                 <div>
-                    <h4 class="logo-text">Onedash</h4>
+                    <h4 class="logo-text">Laund</h4>
                 </div>
                 <div class="toggle-icon ms-auto"><i class="bi bi-list"></i>
                 </div>
@@ -128,30 +133,42 @@ $database = new Database();
             <!--navigation-->
             <ul class="metismenu" id="menu">
                 <li class="menu-label">Menu</li>
-                <li>
-                    <a href="index.php">
-                        <div class="parent-icon"><i class="bi bi-house-fill"></i>
+                <?php
+                $menu = new Menu();
+                $menus = $menu->read(1);
+                ?>
+                <li class="<?= isset($_GET['mydashboard']) ? 'mm-active' : '' ?>">
+                    <a href="?mydashboard" id="btn-mydashboard">
+                        <div class="parent-icon"><i class="bx bx-home fs-4"></i>
                         </div>
                         <div class="menu-title">Dashboard</div>
                     </a>
                 </li>
-                <li>
-                    <a href="javascript:;" class="has-arrow">
-                        <div class="parent-icon"><i class="bi bi-person-lines-fill"></i>
-                        </div>
-                        <div class="menu-title">User Profile</div>
-                    </a>
-                    <ul>
-                        <li> <a href="profile.php"><i class="bi bi-circle"></i>Blue Dashboard 1</a>
+                <?php foreach ($menus as $men) : ?>
+                    <?php if (isset($men['submenu'])) : ?>
+                        <li class="<?= isset($_GET['sub']) && $_GET['page'] == $men['nama_menu'] ? 'mm-active' : '' ?>">
+                            <a href="javascript:;" class="has-arrow">
+                                <div class="parent-icon"><i class="<?= $men['icon'] ?>"></i>
+                                </div>
+                                <div class="menu-title"><?= ucwords($men['nama_menu']) ?></div>
+                            </a>
+                            <ul>
+                                <?php foreach ($men['submenu'] as $submenu) : ?>
+                                    <li class="<?= isset($_GET['sub']) && $_GET['sub'] == $submenu['direktori'] && $_GET['page'] == $men['nama_menu'] ? 'mm-active' : '' ?>"> <a href="?page=<?= $men['nama_menu'] ?>&sub=<?= $submenu['direktori'] ?>"><i class="bx bx-radio-circle fs-4"></i><?= ucwords($submenu['nama_submenu']) ?></a>
+                                    </li>
+                                <?php endforeach; ?>
+                            </ul>
                         </li>
-                        <li> <a href="index2.html"><i class="bi bi-circle"></i>Blue Dashboard 2</a>
+                    <?php else : ?>
+                        <li class="<?= isset($_GET['page']) && $_GET['page'] == $men['nama_menu'] ? 'mm-active' : '' ?>">
+                            <a href="?page=<?= $men['direktori'] ?>">
+                                <div class="parent-icon"><i class="<?= $men['icon'] ?>"></i>
+                                </div>
+                                <div class="menu-title"><?= ucwords($men['nama_menu']) ?></div>
+                            </a>
                         </li>
-                        <li> <a href="index3.html"><i class="bi bi-circle"></i>Color Dashboard 1</a>
-                        </li>
-                        <li> <a href="index4.html"><i class="bi bi-circle"></i>Color Dashboard 2</a>
-                        </li>
-                    </ul>
-                </li>
+                    <?php endif; ?>
+                <?php endforeach; ?>
             </ul>
             <!--end navigation-->
         </aside>
@@ -159,73 +176,21 @@ $database = new Database();
 
         <!--start content-->
         <main class="page-content">
-
-            <div class="row row-cols-1 row-cols-lg-2 row-cols-xl-2 row-cols-xxl-4">
-                <div class="col">
-                    <div class="card overflow-hidden radius-10">
-                        <div class="card-body">
-                            <div class="d-flex align-items-stretch justify-content-between overflow-hidden">
-                                <div class="w-50">
-                                    <p>Total Orders</p>
-                                    <h4 class="">8,542</h4>
-                                </div>
-                                <div class="w-50">
-                                    <p class="mb-3 float-end text-success">+ 16% <i class="bi bi-arrow-up"></i></p>
-                                    <div id="chart1"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="card overflow-hidden radius-10">
-                        <div class="card-body">
-                            <div class="d-flex align-items-stretch justify-content-between overflow-hidden">
-                                <div class="w-50">
-                                    <p>Total Views</p>
-                                    <h4 class="">12.5M</h4>
-                                </div>
-                                <div class="w-50">
-                                    <p class="mb-3 float-end text-danger">- 3.4% <i class="bi bi-arrow-down"></i></p>
-                                    <div id="chart2"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="card overflow-hidden radius-10">
-                        <div class="card-body">
-                            <div class="d-flex align-items-stretch justify-content-between overflow-hidden">
-                                <div class="w-50">
-                                    <p>Revenue</p>
-                                    <h4 class="">$64.5K</h4>
-                                </div>
-                                <div class="w-50">
-                                    <p class="mb-3 float-end text-success">+ 24% <i class="bi bi-arrow-up"></i></p>
-                                    <div id="chart3"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="card overflow-hidden radius-10">
-                        <div class="card-body">
-                            <div class="d-flex align-items-stretch justify-content-between overflow-hidden">
-                                <div class="w-50">
-                                    <p>Customers</p>
-                                    <h4 class="">25.8K</h4>
-                                </div>
-                                <div class="w-50">
-                                    <p class="mb-3 float-end text-success">+ 8.2% <i class="bi bi-arrow-up"></i></p>
-                                    <div id="chart4"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div><!--end row-->
+            <?php
+            $page = isset($_GET['page']) ? $_GET['page'] : '';
+            $sub = isset($_GET['sub']) ? $_GET['sub'] : '';
+            if ($page == '') {
+                include 'menus/main.php';
+            } else if (isset($_GET['mydashboard'])) {
+                include 'menus/main.php';
+            } else {
+                if ($sub == '') {
+                    include 'menus/' . $page . '.php';
+                } else {
+                    include 'menus/' . $page . '/' . $sub . '.php';
+                }
+            }
+            ?>
         </main>
         <!--end page main-->
 
@@ -248,19 +213,21 @@ $database = new Database();
     </div>
     <!--end wrapper-->
 
-
     <!-- Bootstrap bundle JS -->
     <script src="assets/js/bootstrap.bundle.min.js"></script>
     <!--plugins-->
-    <script src="assets/js/jquery.min.js"></script>
     <script src="assets/plugins/simplebar/js/simplebar.min.js"></script>
     <script src="assets/plugins/metismenu/js/metisMenu.min.js"></script>
     <script src="assets/plugins/perfect-scrollbar/js/perfect-scrollbar.js"></script>
-    <script src="assets/plugins/vectormap/jquery-jvectormap-2.0.2.min.js"></script>
-    <script src="assets/plugins/vectormap/jquery-jvectormap-world-mill-en.js"></script>
     <!--app-->
     <script src="assets/js/app.js"></script>
-    <script src="assets/js/index.js"></script>
+    <script>
+        $(document).ready(function() {
+            if (window.location.href.indexOf('page') == -1 && window.location.href.indexOf('mydashboard') == -1) {
+                window.location.href = '?mydashboard';
+            }
+        });
+    </script>
 </body>
 
 </html>
