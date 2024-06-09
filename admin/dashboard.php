@@ -29,6 +29,8 @@ $func = new Functions();
     <link href="assets/plugins/metismenu/css/metisMenu.min.css" rel="stylesheet" />
     <link href="assets/plugins/datatable/css/dataTables.bootstrap5.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="assets/plugins/notifications/css/lobibox.min.css" />
+    <link href="assets/plugins/select2/css/select2.min.css" rel="stylesheet" />
+    <link href="assets/plugins/select2/css/select2-bootstrap4.css" rel="stylesheet" />
     <!-- Bootstrap CSS -->
     <link href="assets/css/bootstrap.min.css" rel="stylesheet" />
     <link href="assets/css/bootstrap-extended.css" rel="stylesheet" />
@@ -45,6 +47,33 @@ $func = new Functions();
     <script src="assets/js/jquery.min.js"></script>
 
     <title>Laundry</title>
+    <style>
+        /* Mengatur gaya untuk elemen Select2 container dengan kelas custom-border */
+        .select2-container--default.custom-border-bottom .select2-selection--single {
+            border: none;
+            border-bottom: 1px solid #000;
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+        .select2-container--default.custom-border-bottom .select2-selection--single:focus,
+        .select2-container--default.custom-border-bottom .select2-selection--single:active {
+            border-bottom: 2px solid #000;
+            outline: none;
+        }
+
+        .select2-container--default.custom-border-bottom .select2-selection--single .select2-selection__arrow {
+            height: 100%;
+            border: none;
+        }
+
+        .select2-container--default.custom-border-bottom .select2-selection--single .select2-selection__rendered {
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+        /* Akhit custom-border */
+    </style>
 </head>
 
 <body>
@@ -213,6 +242,7 @@ $func = new Functions();
                 }
             }
             ?>
+            <div class="modal fade" id="my-modal-centered"></div>
         </main>
         <!--end page main-->
 
@@ -246,9 +276,11 @@ $func = new Functions();
     <script src="assets/plugins/datatable/js/dataTables.bootstrap5.min.js"></script>
     <script src="assets/plugins/notifications/js/lobibox.min.js"></script>
     <script src="assets/plugins/notifications/js/notifications.min.js"></script>
+    <script src="assets/plugins/select2/js/select2.min.js"></script>
     <!-- example from plugin -->
     <script src="assets/plugins/notifications/js/notification-custom-script.js"></script>
     <script src="assets/js/table-datatable.js"></script>
+    <script src="assets/js/form-select2.js"></script>
     <!--app-->
     <script src="assets/js/app.js"></script>
     <script src="assets/js/custom_function.js"></script>
@@ -257,6 +289,7 @@ $func = new Functions();
             if (window.location.href.indexOf('page') == -1 && window.location.href.indexOf('mydashboard') == -1) {
                 window.location.href = 'dashboard.php?mydashboard';
             }
+            $('.select2.custom-border-bottom').next('.select2-container').addClass('custom-border-bottom');
         });
 
         function Logout() {
