@@ -1,9 +1,9 @@
 <?php
-date_default_timezone_set('Asia/Jakarta');
-
-include 'config/connection.php';
-include 'classes/DB.php';
-include 'classes/Menu.php';
+session_start();
+if (isset($_SESSION['is_login'])) {
+    header('Location: dashboard.php');
+    exit;
+}
 ?>
 <!doctype html>
 <html lang="en">
@@ -13,219 +13,116 @@ include 'classes/Menu.php';
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href="assets/images/favicon-32x32.png" type="image/png" />
-    <!--plugins-->
-    <link href="assets/plugins/vectormap/jquery-jvectormap-2.0.2.css" rel="stylesheet" />
-    <link href="assets/plugins/simplebar/css/simplebar.css" rel="stylesheet" />
-    <link href="assets/plugins/perfect-scrollbar/css/perfect-scrollbar.css" rel="stylesheet" />
-    <link href="assets/plugins/metismenu/css/metisMenu.min.css" rel="stylesheet" />
     <!-- Bootstrap CSS -->
     <link href="assets/css/bootstrap.min.css" rel="stylesheet" />
     <link href="assets/css/bootstrap-extended.css" rel="stylesheet" />
     <link href="assets/css/style.css" rel="stylesheet" />
     <link href="assets/css/icons.css" rel="stylesheet">
-    <link href="assets/css/fonts-google.css" rel="stylesheet">
-    <link href="assets/css/bootstrap-icons.css" rel="stylesheet">
-    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css"> -->
-    <!-- jquery -->
-    <script src="assets/js/jquery.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
 
     <!-- loader-->
     <link href="assets/css/pace.min.css" rel="stylesheet" />
+
+    <!--plugins-->
+    <link rel="stylesheet" href="assets/plugins/notifications/css/lobibox.min.css" />
 
     <title>Laundry</title>
 </head>
 
 <body>
 
-
     <!--start wrapper-->
     <div class="wrapper">
-        <!--start top header-->
-        <header class="top-header">
-            <nav class="navbar navbar-expand gap-3">
-                <div class="mobile-toggle-icon fs-3 d-flex d-lg-none">
-                    <i class="bi bi-list"></i>
-                </div>
-                <div class="top-navbar-right ms-auto">
-                    <ul class="navbar-nav align-items-center gap-1">
-                        <li class="nav-item dropdown dropdown-large">
-                            <a class="nav-link dropdown-toggle dropdown-toggle-nocaret" href="#" data-bs-toggle="dropdown">
-                                <div class="notifications">
-                                    <span class="notify-badge">8</span>
-                                    <i class="bx bx-bell fs-4"></i>
-                                </div>
-                            </a>
-                            <div class="dropdown-menu dropdown-menu-end p-0">
-                                <div class="p-2 border-bottom m-2">
-                                    <h5 class="h5 mb-0">Notifications</h5>
-                                </div>
-                                <div class="header-notifications-list p-2">
-                                    <a class="dropdown-item" href="#">
-                                        <div class="d-flex align-items-center">
-                                            <div class="notification-box bg-light-primary text-primary"><i class="bx bx-cart-alt fs-4"></i></div>
-                                            <div class="ms-3 flex-grow-1">
-                                                <h6 class="mb-0 dropdown-msg-user">New Orders <span class="msg-time float-end text-secondary">1 m</span></h6>
-                                                <small class="mb-0 dropdown-msg-text text-secondary d-flex align-items-center">You have recived new orders</small>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-                <div class="dropdown dropdown-user-setting">
-                    <a class="dropdown-toggle dropdown-toggle-nocaret" href="#" data-bs-toggle="dropdown">
-                        <div class="user-setting d-flex align-items-center gap-3">
-                            <img src="assets/images/avatars/avatar-1.png" class="user-img" alt="">
-                            <div class="d-none d-sm-block">
-                                <p class="user-name mb-0">D'Art Nanzy</p>
-                                <small class="mb-0 dropdown-user-designation">Pemilik</small>
-                            </div>
-                        </div>
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-end">
-                        <li>
-                            <a class="dropdown-item" href="pages-user-profile.html">
-                                <div class="d-flex align-items-center">
-                                    <div class=""><i class="bi bi-person-fill"></i></div>
-                                    <div class="ms-3"><span>Profile</span></div>
-                                </div>
-                            </a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item" href="#">
-                                <div class="d-flex align-items-center">
-                                    <div class=""><i class="bi bi-gear-fill"></i></div>
-                                    <div class="ms-3"><span>Setting</span></div>
-                                </div>
-                            </a>
-                        </li>
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
-                        <li>
-                            <a class="dropdown-item" href="authentication-signup-with-header-footer.html">
-                                <div class="d-flex align-items-center">
-                                    <div class=""><i class="bi bi-lock-fill"></i></div>
-                                    <div class="ms-3"><span>Logout</span></div>
-                                </div>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </nav>
-        </header>
-        <!--end top header-->
-
-        <!--start sidebar -->
-        <aside class="sidebar-wrapper" data-simplebar="true">
-            <div class="sidebar-header">
-                <div>
-                    <img src="assets/images/logo-icon.png" class="logo-icon" alt="logo icon">
-                </div>
-                <div>
-                    <h4 class="logo-text">Laund</h4>
-                </div>
-                <div class="toggle-icon ms-auto"><i class="bi bi-list"></i>
-                </div>
-            </div>
-            <!--navigation-->
-            <ul class="metismenu" id="menu">
-                <li class="menu-label">Menu</li>
-                <?php
-                $menu = new Menu();
-                $menus = $menu->read(1);
-                ?>
-                <li class="<?= isset($_GET['mydashboard']) ? 'mm-active' : '' ?>">
-                    <a href="?mydashboard" id="btn-mydashboard">
-                        <div class="parent-icon"><i class="bx bx-home fs-4"></i>
-                        </div>
-                        <div class="menu-title">Dashboard</div>
-                    </a>
-                </li>
-                <?php foreach ($menus as $men) : ?>
-                    <?php if (isset($men['submenu'])) : ?>
-                        <li class="<?= isset($_GET['sub']) && $_GET['page'] == $men['nama_menu'] ? 'mm-active' : '' ?>">
-                            <a href="javascript:;" class="has-arrow">
-                                <div class="parent-icon"><i class="<?= $men['icon'] ?>"></i>
-                                </div>
-                                <div class="menu-title"><?= ucwords($men['nama_menu']) ?></div>
-                            </a>
-                            <ul>
-                                <?php foreach ($men['submenu'] as $submenu) : ?>
-                                    <li class="<?= isset($_GET['sub']) && $_GET['sub'] == $submenu['direktori'] && $_GET['page'] == $men['nama_menu'] ? 'mm-active' : '' ?>"> <a href="?page=<?= $men['nama_menu'] ?>&sub=<?= $submenu['direktori'] ?>"><i class="bx bx-radio-circle fs-4"></i><?= ucwords($submenu['nama_submenu']) ?></a>
-                                    </li>
-                                <?php endforeach; ?>
-                            </ul>
-                        </li>
-                    <?php else : ?>
-                        <li class="<?= isset($_GET['page']) && $_GET['page'] == $men['nama_menu'] ? 'mm-active' : '' ?>">
-                            <a href="?page=<?= $men['direktori'] ?>">
-                                <div class="parent-icon"><i class="<?= $men['icon'] ?>"></i>
-                                </div>
-                                <div class="menu-title"><?= ucwords($men['nama_menu']) ?></div>
-                            </a>
-                        </li>
-                    <?php endif; ?>
-                <?php endforeach; ?>
-            </ul>
-            <!--end navigation-->
-        </aside>
-        <!--end sidebar -->
 
         <!--start content-->
-        <main class="page-content">
-            <?php
-            $page = isset($_GET['page']) ? $_GET['page'] : '';
-            $sub = isset($_GET['sub']) ? $_GET['sub'] : '';
-            if ($page == '') {
-                include 'menus/main.php';
-            } else if (isset($_GET['mydashboard'])) {
-                include 'menus/main.php';
-            } else {
-                if ($sub == '') {
-                    include 'menus/' . $page . '.php';
-                } else {
-                    include 'menus/' . $page . '/' . $sub . '.php';
-                }
-            }
-            ?>
+        <main class="authentication-content">
+            <div class="container-fluid">
+                <div class="authentication-card">
+                    <div class="card shadow rounded-0 overflow-hidden">
+                        <div class="row g-0">
+                            <div class="col-lg-6 bg-login d-flex align-items-center justify-content-center">
+                                <img src="assets/images/login-img.png" class="img-fluid" alt="">
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="card-body p-4 p-sm-5">
+                                    <h5 class="card-title">Login</h5>
+                                    <p class="card-text mb-4">Silahkan login disebelah sini!</p>
+                                    <form class="form-body" id="form-login">
+                                        <div class="row g-3">
+                                            <div class="col-12">
+                                                <label for="username" class="form-label">Username</label>
+                                                <div class="ms-auto position-relative">
+                                                    <div class="position-absolute top-50 translate-middle-y search-icon px-3"><i class="bi bi-envelope-fill"></i></div>
+                                                    <input type="text" required class="form-control radius-30 ps-5" id="username" name="username" placeholder="Masukkan Username ..." autofocus>
+                                                </div>
+                                            </div>
+                                            <div class="col-12">
+                                                <label for="inputChoosePassword" class="form-label">Password</label>
+                                                <div class="ms-auto position-relative">
+                                                    <div class="position-absolute top-50 translate-middle-y search-icon px-3"><i class="bi bi-lock-fill"></i></div>
+                                                    <input type="password" required class="form-control radius-30 ps-5" id="inputChoosePassword" name="password" placeholder="Masukkan Password ...">
+                                                </div>
+                                            </div>
+                                            <div class="col-12">
+                                                <div class="d-grid">
+                                                    <button type="submit" class="btn btn-primary radius-30">Sign In</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </main>
+
         <!--end page main-->
 
-        <!--start overlay-->
-        <div class="overlay nav-toggle-icon"></div>
-        <!--end overlay-->
-
-        <!--start footer-->
-        <footer class="footer">
-            <div class="footer-text">
-                Copyright &copy; <?= date('Y') ?>. All right reserved.
-            </div>
-        </footer>
-        <!--end footer-->
-
-
-        <!--Start Back To Top Button-->
-        <a href="javaScript:;" class="back-to-top"><i class='bx bxs-up-arrow-alt'></i></a>
-        <!--End Back To Top Button-->
     </div>
     <!--end wrapper-->
 
-    <!-- Bootstrap bundle JS -->
-    <script src="assets/js/bootstrap.bundle.min.js"></script>
+
     <!--plugins-->
-    <script src="assets/plugins/simplebar/js/simplebar.min.js"></script>
-    <script src="assets/plugins/metismenu/js/metisMenu.min.js"></script>
-    <script src="assets/plugins/perfect-scrollbar/js/perfect-scrollbar.js"></script>
-    <!--app-->
-    <script src="assets/js/app.js"></script>
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/pace.min.js"></script>
+
+    <!--notification js -->
+    <script src="assets/plugins/notifications/js/lobibox.min.js"></script>
+    <script src="assets/plugins/notifications/js/notifications.min.js"></script>
+    <script src="assets/plugins/notifications/js/notification-custom-script.js"></script>
+    <script src="assets/js/sweetalert2@11.js"></script>
     <script>
         $(document).ready(function() {
-            if (window.location.href.indexOf('page') == -1 && window.location.href.indexOf('mydashboard') == -1) {
-                window.location.href = '?mydashboard';
-            }
+            $('#form-login').submit(function(e) {
+                e.preventDefault();
+                let data = $(this).serialize();
+                data = data + '&action=login';
+                $.ajax({
+                    type: 'POST',
+                    url: 'classes/Authentication.php',
+                    data: data,
+                    success: function(response) {
+                        let res = JSON.parse(response);
+                        Swal.fire({
+                            icon: res.status,
+                            title: res.msg,
+                            showConfirmButton: false,
+                            timer: 1500
+                        }).then(function(e) {
+                            if (e.dismiss === Swal.DismissReason.timer) {
+                                if (res.status == 'success') {
+                                    window.location.href = 'dashboard.php';
+                                } else {
+                                    location.reload();
+                                }
+                            }
+                        });
+                    }
+                });
+            });
         });
     </script>
 </body>
