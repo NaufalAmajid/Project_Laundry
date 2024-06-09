@@ -42,13 +42,12 @@ class Login
         $stmt->execute();
 
         return $stmt->fetch(PDO::FETCH_ASSOC);
-        return $query;
     }
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    include '../config/connection.php';
-    include '../classes/DB.php';
+    require_once '../config/connection.php';
+    require_once '../classes/DB.php';
     $login = new Login();
 
     if ($_POST['action'] == 'login') {

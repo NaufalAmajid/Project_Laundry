@@ -7,9 +7,12 @@ if (!isset($_SESSION['is_login'])) {
 
 date_default_timezone_set('Asia/Jakarta');
 
-include 'config/connection.php';
-include 'classes/DB.php';
-include 'classes/Menu.php';
+require_once 'config/connection.php';
+require_once 'config/functions.php';
+require_once 'classes/DB.php';
+require_once 'classes/Menu.php';
+
+$func = new Functions();
 ?>
 <!doctype html>
 <html lang="en">
@@ -24,6 +27,8 @@ include 'classes/Menu.php';
     <link href="assets/plugins/simplebar/css/simplebar.css" rel="stylesheet" />
     <link href="assets/plugins/perfect-scrollbar/css/perfect-scrollbar.css" rel="stylesheet" />
     <link href="assets/plugins/metismenu/css/metisMenu.min.css" rel="stylesheet" />
+    <link href="assets/plugins/datatable/css/dataTables.bootstrap5.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="assets/plugins/notifications/css/lobibox.min.css" />
     <!-- Bootstrap CSS -->
     <link href="assets/css/bootstrap.min.css" rel="stylesheet" />
     <link href="assets/css/bootstrap-extended.css" rel="stylesheet" />
@@ -32,11 +37,12 @@ include 'classes/Menu.php';
     <link href="assets/css/fonts-google.css" rel="stylesheet">
     <!-- <link href="assets/css/bootstrap-icons.css" rel="stylesheet"> -->
     <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css"> -->
-    <!-- jquery -->
-    <script src="assets/js/jquery.min.js"></script>
 
     <!-- loader-->
     <link href="assets/css/pace.min.css" rel="stylesheet" />
+
+    <!-- javascript -->
+    <script src="assets/js/jquery.min.js"></script>
 
     <title>Laundry</title>
 </head>
@@ -236,8 +242,16 @@ include 'classes/Menu.php';
     <script src="assets/plugins/metismenu/js/metisMenu.min.js"></script>
     <script src="assets/plugins/perfect-scrollbar/js/perfect-scrollbar.js"></script>
     <script src="assets/js/sweetalert2@11.js"></script>
+    <script src="assets/plugins/datatable/js/jquery.dataTables.min.js"></script>
+    <script src="assets/plugins/datatable/js/dataTables.bootstrap5.min.js"></script>
+    <script src="assets/plugins/notifications/js/lobibox.min.js"></script>
+    <script src="assets/plugins/notifications/js/notifications.min.js"></script>
+    <!-- example from plugin -->
+    <script src="assets/plugins/notifications/js/notification-custom-script.js"></script>
+    <script src="assets/js/table-datatable.js"></script>
     <!--app-->
     <script src="assets/js/app.js"></script>
+    <script src="assets/js/custom_function.js"></script>
     <script>
         $(document).ready(function() {
             if (window.location.href.indexOf('page') == -1 && window.location.href.indexOf('mydashboard') == -1) {
