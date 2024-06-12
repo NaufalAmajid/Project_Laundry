@@ -1,3 +1,5 @@
+<input type="hidden" name="pemilik_id" id="pemilik_id" value="<?= $_SESSION['the_id'] ?>">
+<input type="hidden" name="notrans" id="notrans" value="<?= $_GET['notrans'] ?>">
 <div class="card-header py-3">
     <div class="row g-3 align-items-center">
         <div class="col-12 col-lg-4 col-md-6 me-auto">
@@ -38,7 +40,9 @@
                                         <select name="pelanggan" id="pelanggan" class="select2 custom-border-bottom form-control" onchange="detailPelanggan()">
                                             <option value="">Pilih Pelanggan</option>
                                             <?php
-                                            $pelanggans = $trans->getAllPelanggan();
+                                            require_once 'classes/Pelanggan.php';
+                                            $pelanggan = new Pelanggan();
+                                            $pelanggans = $pelanggan->getAllPelanggan();
                                             foreach ($pelanggans as $pelanggan) :
                                             ?>
                                                 <option value="<?= $pelanggan['pelanggan_id'] ?>" data-username="<?= $pelanggan['username'] ?>" data-nama="<?= $pelanggan['nama_pelanggan'] ?>" data-nohp="<?= $pelanggan['no_hp'] ?>" data-alamat="<?= $pelanggan['alamat'] ?>"><?= ucwords($pelanggan['nama_pelanggan']) ?></option>
@@ -65,17 +69,21 @@
                                 <table class="table table-borderless mb-0">
                                     <thead>
                                         <td colspan="2">
-                                            <select name="jasa" id="jasa" class="select2 custom-border-bottom form-control">
+                                            <?php
+                                            require_once 'classes/Jasa.php';
+                                            $jasa = new Jasa();
+                                            ?>
+                                            <select name="jasa" id="jasa" class="select2 custom-border-bottom form-control" onchange="transOperation()">
                                                 <option value="">-- Pilih Jasa --</option>
-                                                <?php foreach ($trans->getAllJasa() as $jasa) : ?>
+                                                <?php foreach ($jasa->getAllJasa() as $jasa) : ?>
                                                     <option value="<?= $jasa['jasa_id'] ?>" data-harga="<?= $jasa['harga_satuan'] ?>"><?= ucwords($jasa['nama_jasa']) ?></option>
                                                 <?php endforeach; ?>
                                             </select>
                                         </td>
-                                        <td align="center">3.500</td>
-                                        <td align="center"><input type="text" name="quantity" id="quantity" class="input-border-bottom-center" size="3" placeholder="Jml"></td>
-                                        <td align="center">7.000</td>
-                                        <td align="center"><a href="javascript:;" class="text-primary"><i class="bx bx-pencil"></i></a></td>
+                                        <td align="center" id="disHargaSatuan">0</td>
+                                        <td align="center"><input type="text" name="quantity" id="quantity" class="input-border-bottom-center" size="3" placeholder="Jml" onkeyup="transOperation(true)"></td>
+                                        <td align="center" id="disTotal">0</td>
+                                        <td align="center"><a href="javascript:;" class="text-primary d-none" id="btn-addTrans" onclick="addTransaksi()"><i class="bx bx-download fs-5"></i></a></td>
                                     </thead>
                                     <thead class="table-secondary">
                                         <tr>
@@ -87,13 +95,6 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <th><a href="javascript:;" class="text-danger"><i class="bx bx-trash"></i></a></th>
-                                            <td>Laundry Reguler</td>
-                                            <td align="center">3.500</td>
-                                            <td align="center">2</td>
-                                            <td align="center" colspan="2">7.000</td>
-                                        </tr>
                                         <tr>
                                             <th><a href="javascript:;" class="text-danger"><i class="bx bx-trash"></i></a></th>
                                             <td>Laundry Reguler</td>
@@ -128,4 +129,58 @@
             placeholder: 'Pilih Jasa',
         })
     })
+
+    function transOperation(showBtn = false) {
+        if (isNaN($('#quantity').val())) {
+            $('#quantity').val('');
+            return;
+        }
+
+        let jasa = $('#jasa').find(':selected');
+
+        let harga = jasa.data('harga');
+        let disHargaSatuan = new Intl.NumberFormat('id', {
+            maximumFractionDigits: 0
+        }).format(harga);
+
+        let quantity = $('#quantity').val();
+        let total = new Intl.NumberFormat('id', {
+            maximumFractionDigits: 0
+        }).format(harga * quantity);
+
+        if (showBtn) {
+            if (quantity == '' || quantity == 0) {
+                $('#btn-addTrans').addClass('d-none');
+            } else {
+                $('#btn-addTrans').removeClass('d-none');
+            }
+        }
+
+        $('#disHargaSatuan').text(disHargaSatuan);
+        $('#disTotal').text(total);
+    }
+
+    function addTransaksi() {
+        let pemilik_id = $('#pemilik_id').val();
+        let notrans = $('#notrans').val();
+        let pelanggan_id = localStorage.getItem('pelanggan_id');
+        if (pelanggan_id == null) {
+            Lobibox.notify("warning", {
+                pauseDelayOnHover: true,
+                size: "mini",
+                rounded: true,
+                delayIndicator: false,
+                delay: 2500,
+                icon: "bx bx-error",
+                continueDelayOnInactiveTab: false,
+                sound: false,
+                position: "center top",
+                msg: "Pilih pelanggan terlebih dahulu"
+            });
+            return;
+        }
+        let jasa_id = $('#jasa').find(':selected').val();
+        let quantity = $('#quantity').val();
+        alert(`Pemilik ID : ${pemilik_id} \n No Trans : ${notrans} \n Pelanggan ID : ${pelanggan_id} \n Jasa ID : ${jasa_id} \n Quantity : ${quantity}`);
+    }
 </script>

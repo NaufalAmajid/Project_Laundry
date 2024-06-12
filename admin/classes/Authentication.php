@@ -62,6 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if ($login) {
             session_start();
             $_SESSION['user_id'] = $login['user_id'];
+            $_SESSION['the_id'] = $login['the_id'];
             $_SESSION['role_id'] = $login['role_id'];
             $_SESSION['nama_role'] = $login['nama_role'];
             $_SESSION['username'] = $login['username'];

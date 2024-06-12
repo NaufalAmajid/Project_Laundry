@@ -54,7 +54,7 @@
     function addPelanggan() {
         let data = $('#form-add-pelanggan').serializeArray();
         let send = {};
-        let cek = {};
+        let cek = [];
         data.map(item => {
             if (item.value == '') {
                 cek.push(item.name);
@@ -62,14 +62,14 @@
                 send[item.name] = item.value;
             }
         })
-        if (cek.length == 0) {
+        if (cek.length != 0) {
             let text = cek.join(', ');
             Lobibox.notify("warning", {
                 pauseDelayOnHover: true,
                 size: "mini",
                 rounded: true,
                 delayIndicator: false,
-                delay: 2000,
+                delay: 2500,
                 icon: "bx bx-error",
                 continueDelayOnInactiveTab: false,
                 sound: false,
@@ -77,6 +77,37 @@
                 msg: `Field ${text} harus diisi!`
             });
             return;
+        } else {
+            $.ajax({
+                url: 'classes/Pelanggan.php',
+                type: 'POST',
+                data: {
+                    action: 'add_pelanggan',
+                    data: send
+                },
+                success: function(response) {
+                    let res = JSON.parse(response);
+
+                    Lobibox.notify(`${res.status}`, {
+                        pauseDelayOnHover: true,
+                        size: "mini",
+                        rounded: true,
+                        delayIndicator: false,
+                        delay: 2500,
+                        icon: `${res.icon}`,
+                        continueDelayOnInactiveTab: false,
+                        sound: false,
+                        position: "center top",
+                        msg: `${res.message}`
+                    });
+
+                    if (res.status == 'success') {
+                        setTimeout(() => {
+                            location.reload();
+                        }, 2500);
+                    }
+                }
+            })
         }
     }
 </script>
