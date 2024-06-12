@@ -73,6 +73,14 @@ $func = new Functions();
         }
 
         /* Akhit custom-border */
+
+        .input-border-bottom-center {
+            border: none;
+            border-bottom: 1px solid #000;
+            padding-left: 0;
+            padding-right: 0;
+            text-align: center;
+        }
     </style>
 </head>
 

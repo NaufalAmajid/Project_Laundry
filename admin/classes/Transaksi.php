@@ -9,6 +9,20 @@ class Transaksi
         $this->conn = DB::getInstance()->connection();
     }
 
+    public function getAllJasa()
+    {
+        $query = "SELECT * FROM daftar_jasa WHERE is_active = 1";
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+
+        $jasa = [];
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $jasa[] = $row;
+        }
+
+        return $jasa;
+    }
+
     public function getAllPelanggan()
     {
         $query = "SELECT
