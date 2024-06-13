@@ -75,7 +75,7 @@
                                             ?>
                                             <select name="jasa" id="jasa" class="select2 custom-border-bottom form-control" onchange="transOperation()">
                                                 <option value="">-- Pilih Jasa --</option>
-                                                <?php foreach ($jasa->getAllJasa() as $jasa) : ?>
+                                                <?php foreach ($jasa->getAllJasaTrans() as $jasa) : ?>
                                                     <option value="<?= $jasa['jasa_id'] ?>" data-harga="<?= $jasa['harga_satuan'] ?>"><?= ucwords($jasa['nama_jasa']) ?></option>
                                                 <?php endforeach; ?>
                                             </select>
@@ -94,15 +94,7 @@
                                             <th colspan="2">Total</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        <tr>
-                                            <th><a href="javascript:;" class="text-danger"><i class="bx bx-trash"></i></a></th>
-                                            <td>Laundry Reguler</td>
-                                            <td align="center">3.500</td>
-                                            <td align="center">2</td>
-                                            <td align="center" colspan="2">7.000</td>
-                                        </tr>
-                                    </tbody>
+                                    <tbody id="list_jasa_trans"></tbody>
                                     <tr>
                                         <td colspan="5">
                                             <hr>
@@ -160,6 +152,23 @@
         $('#disTotal').text(total);
     }
 
+    listJasaTransaksi();
+
+    function listJasaTransaksi() {
+        let notrans = $('#notrans').val();
+        $.ajax({
+            url: 'content/list-jasa-transaksi.php',
+            type: 'POST',
+            data: {
+                notrans: notrans,
+                action: 'list_jasa_transaksi'
+            },
+            success: function(response) {
+                $('#list_jasa_trans').html(response);
+            }
+        })
+    }
+
     function addTransaksi() {
         let pemilik_id = $('#pemilik_id').val();
         let notrans = $('#notrans').val();
@@ -181,6 +190,40 @@
         }
         let jasa_id = $('#jasa').find(':selected').val();
         let quantity = $('#quantity').val();
-        alert(`Pemilik ID : ${pemilik_id} \n No Trans : ${notrans} \n Pelanggan ID : ${pelanggan_id} \n Jasa ID : ${jasa_id} \n Quantity : ${quantity}`);
+        $.ajax({
+            url: 'classes/Transaksi.php',
+            type: 'POST',
+            data: {
+                pemilik_id: pemilik_id,
+                notrans: notrans,
+                pelanggan_id: pelanggan_id,
+                jasa_id: jasa_id,
+                quantity: quantity,
+                action: 'add_transaksi'
+            },
+            success: function(response) {
+                let res = JSON.parse(response);
+                if (res.status == 'success') {
+                    $('#jasa').val('').trigger('change');
+                    $('#quantity').val('');
+                    $('#disHargaSatuan').text('0');
+                    $('#disTotal').text('0');
+                    $('#btn-addTrans').addClass('d-none');
+                } else {
+                    Lobibox.notify(`${res.status}`, {
+                        pauseDelayOnHover: true,
+                        size: "mini",
+                        rounded: true,
+                        delayIndicator: false,
+                        delay: 2500,
+                        icon: `${res.icon}`,
+                        continueDelayOnInactiveTab: false,
+                        sound: false,
+                        position: "center top",
+                        msg: `${res.msg}`
+                    });
+                }
+            }
+        })
     }
 </script>

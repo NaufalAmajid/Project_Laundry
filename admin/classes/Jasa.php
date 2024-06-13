@@ -21,6 +21,20 @@ class Jasa
         return $db->update('daftar_jasa', $data, $where);
     }
 
+    public function getAllJasaTrans()
+    {
+        $query = "SELECT * FROM daftar_jasa WHERE is_active = 1";
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+
+        $data = [];
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $data[] = $row;
+        }
+
+        return $data;
+    }
+
     public function getAllJasa()
     {
         $query = "SELECT
@@ -33,7 +47,7 @@ class Jasa
                     COUNT(CASE WHEN dt.status_transaksi = 2 THEN dt.id END) AS jumlah_orderan_selesai
                 FROM
                     daftar_jasa dj
-                LEFT JOIN detaill_transaksi dt ON
+                LEFT JOIN detail_transaksi dt ON
                     dj.jasa_id = dt.jasa_id
                 GROUP BY
                     dj.jasa_id,
