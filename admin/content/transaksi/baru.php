@@ -1,10 +1,24 @@
+<?php
+$desc = $trans->getDescriptionTrans($_GET['notrans']);
+?>
 <input type="hidden" name="pemilik_id" id="pemilik_id" value="<?= $_SESSION['the_id'] ?>">
 <input type="hidden" name="notrans" id="notrans" value="<?= $_GET['notrans'] ?>">
 <div class="card-header py-3">
     <div class="row g-3 align-items-center">
-        <div class="col-12 col-lg-4 col-md-6 me-auto">
-            <h5 class="mb-1"><?= $func->dateIndonesia(date('Y-m-d')) . ' ' . date('H:i') ?></h5>
-            <p class="mb-0">No Transaksi : <?= isset($_GET['notrans']) ? $_GET['notrans'] : '-' ?></p>
+        <div class="col-12 col-lg-8 col-md-6 me-auto">
+            <?php if ($desc) : ?>
+                <h5 class="mb-1"><?= $func->dateIndonesia(date($desc['tgl_trans'])) . ' ' . $desc['jam_trans'] ?></h5>
+                <p class="mb-0">No Transaksi : <?= isset($_GET['notrans']) ? $_GET['notrans'] : '-' ?></p>
+                <?php if (is_null($desc['status_transaksi'])) : ?>
+                    <small class="mb-0 text-primary"><i>Pending Transaction</i></small>
+                <?php else : ?>
+                    <small class="mb-0 text-success"><i>Processing Transaction</i></small>
+                <?php endif; ?>
+            <?php else : ?>
+                <h5 class="mb-1"><?= $func->dateIndonesia(date('Y-m-d')) . ' ' . date('H:i') ?></h5>
+                <p class="mb-0">No Transaksi : <?= isset($_GET['notrans']) ? $_GET['notrans'] : '-' ?></p>
+                <small class="mb-0 text-primary"><i id="show-status-trans"></i></small>
+            <?php endif; ?>
         </div>
     </div>
 </div>
@@ -35,9 +49,13 @@
                         <div class="card-body">
                             <div class="d-flex align-items-center">
                                 <div class="info">
-                                    <h6 class="mb-2">Pelanggan <span><a href="javascript:;" onclick="modalAddPelanggan()" class="text-info" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Buat Pelanggan Baru" aria-label="pelanggan_baru"><i class="bx bx-error-alt fs-5"></i></a></span></h6>
+                                    <h6 class="mb-2">Pelanggan
+                                        <?php if (!$desc) : ?>
+                                            <span><a href="javascript:;" onclick="modalAddPelanggan()" id="btn-new-pelanggan" class="text-info" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Buat Pelanggan Baru" aria-label="pelanggan_baru"><i class="bx bx-error-alt fs-5"></i></a></span>
+                                        <?php endif; ?>
+                                    </h6>
                                     <div class="mb-1">
-                                        <select name="pelanggan" id="pelanggan" class="select2 custom-border-bottom form-control" onchange="detailPelanggan()">
+                                        <select name="pelanggan" id="pelanggan" class="select2 custom-border-bottom form-control" onchange="detailPelanggan()" <?= $desc ? 'disabled' : '' ?>>
                                             <option value="">Pilih Pelanggan</option>
                                             <?php
                                             require_once 'classes/Pelanggan.php';
@@ -81,7 +99,7 @@
                                             </select>
                                         </td>
                                         <td align="center" id="disHargaSatuan">0</td>
-                                        <td align="center"><input type="text" name="quantity" id="quantity" class="input-border-bottom-center" size="3" placeholder="Jml" onkeyup="transOperation(true)"></td>
+                                        <td align="center"><input type="text" name="quantity" id="quantity" class="input-border-bottom-center" size="3" placeholder="Jml" onkeyup="transOperation(true)" autocomplete="off"></td>
                                         <td align="center" id="disTotal">0</td>
                                         <td align="center"><a href="javascript:;" class="text-primary d-none" id="btn-addTrans" onclick="addTransaksi()"><i class="bx bx-download fs-5"></i></a></td>
                                     </thead>
@@ -95,20 +113,26 @@
                                         </tr>
                                     </thead>
                                     <tbody id="list_jasa_trans"></tbody>
-                                    <tr>
-                                        <td colspan="5">
-                                            <hr>
-                                        </td>
-                                    </tr>
-                                    <tfoot>
-                                        <tr>
-                                            <td align="end" colspan="4" class="fs-5">Total</td>
-                                            <td align="center" class="fs-5" colspan="2">14.000</td>
-                                        </tr>
-                                    </tfoot>
                                 </table>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 col-lg-12 text-md-end">
+                    <div class="mb-0">
+                        <?php if ($desc) : ?>
+                            <a href="javascript:;" onclick="printNota()" class="btn btn-sm btn-secondary"><i class="bx bx-printer"></i> Cetak Nota</a>
+                        <?php else : ?>
+                            <a href="javascript:;" onclick="changeStatusTrans()" class="btn btn-sm btn-secondary"><i class="bx bx-printer"></i> Cetak Nota</a>
+                        <?php endif; ?>
+                    </div>
+                    <div class="mb-0">
+                        <small class="mb-0">*cetak nota untuk melanjutkan transaksi ke status <i><b class="text-success">PROSES</b></i></small>
+                    </div>
+                    <div class="mb-0">
+                        <small class="mb-0">jika tidak maka, status transaksi masih menjadi <i><b class="text-danger">PENDING</b></i></small>
                     </div>
                 </div>
             </div>
@@ -209,6 +233,10 @@
                     $('#disHargaSatuan').text('0');
                     $('#disTotal').text('0');
                     $('#btn-addTrans').addClass('d-none');
+                    $('#show-status-trans').text('Pending Transaction')
+                    $('#btn-new-pelanggan').hide();
+                    $('#pelanggan').attr('disabled', 'disabled')
+                    listJasaTransaksi();
                 } else {
                     Lobibox.notify(`${res.status}`, {
                         pauseDelayOnHover: true,
@@ -223,6 +251,54 @@
                         msg: `${res.msg}`
                     });
                 }
+            }
+        })
+    }
+
+    function changeStatusTrans() {
+        let notrans = $('#notrans').val();
+        $.ajax({
+            url: 'classes/Transaksi.php',
+            type: 'POST',
+            data: {
+                notrans: notrans,
+                action: 'change_status'
+            },
+            success: function(response) {
+                let result = JSON.parse(response);
+                Lobibox.notify(`${result.status}`, {
+                    pauseDelayOnHover: true,
+                    size: "mini",
+                    rounded: true,
+                    delayIndicator: false,
+                    delay: 2000,
+                    icon: `${result.icon}`,
+                    continueDelayOnInactiveTab: false,
+                    sound: false,
+                    position: "top right",
+                    msg: result.msg,
+                });
+                if (result.status == 'success') {
+                    setTimeout(() => {
+                        window.open(`printer/nota.php?notrans=${notrans}`, 'nota', 'width=800,height=600');
+                        location.reload()
+                    }, 2000);
+                }
+            }
+        })
+    }
+
+    function printNota() {
+        let notrans = $('#notrans').val();
+        $.ajax({
+            url: 'classes/Transaksi.php',
+            type: 'POST',
+            data: {
+                notrans: notrans,
+                action: 'change_status'
+            },
+            success: function(response) {
+                window.open(`printer/nota.php?notrans=${notrans}`, 'nota', 'width=800,height=600');
             }
         })
     }

@@ -73,9 +73,9 @@ $trans = new Transaksi();
 
 
     function actionTrans(act) {
+        localStorage.removeItem('pelanggan_id');
         if (act == 'baru') {
             let noTrans = getFormattedDate();
-            localStorage.removeItem('pelanggan_id');
             window.location.href = '?page=transaksi&action=baru&notrans=' + noTrans;
         } else if (act == 'pending') {
             window.location.href = '?page=transaksi&action=pending';

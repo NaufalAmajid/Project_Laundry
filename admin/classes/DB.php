@@ -79,8 +79,29 @@ class DB
 
     public function delete($table, $where)
     {
-        $query = "DELETE FROM $table WHERE $where";
+        $set = '';
+        foreach ($where as $key => $value) {
+            if (count($where) > 1) {
+                if (next($where)) {
+                    $set .= "$key=:$key AND ";
+                } else {
+                    $set .= "$key=:$key";
+                }
+            } else {
+                $set .= "$key=:$key";
+            }
+        }
+        $set = rtrim($set, ", ");
+        $query = "";
+        if ($set != "") {
+            $query = "DELETE FROM $table WHERE $set";
+        } else {
+            $query = "DELETE FROM $table";
+        }
         $stmt = $this->conn->prepare($query);
+        foreach ($where as $key => $value) {
+            $stmt->bindValue(":$key", $value);
+        }
         $stmt->execute();
         return $stmt->rowCount();
     }
