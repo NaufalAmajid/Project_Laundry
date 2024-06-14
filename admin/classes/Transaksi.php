@@ -223,4 +223,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         echo json_encode($response);
     }
+
+    if ($_POST['action'] == 'remove_no_transaksi') {
+        $where = [
+            'no_transaksi' => $_POST['no_transaksi']
+        ];
+
+        $removeNoTrans = $transaksi->removeTransaksi('transaksi', $where);
+
+        if ($removeNoTrans) {
+            echo json_encode(['status' => 'success', 'message' => 'Transaksi berhasil dihapus', 'icon' => 'bx bx-check']);
+        } else {
+            echo json_encode(['status' => 'error', 'message' => 'Transaksi gagal dihapus', 'icon' => 'bx bx-error-circle']);
+        }
+    }
 }
