@@ -74,6 +74,7 @@ class Transaksi
     {
         $query = "select
                         dt.id as detail_id,
+                        dt.status_transaksi,
                         trans.no_transaksi,
                         depel.nama_pelanggan,
                         dj.nama_jasa,

@@ -1,9 +1,14 @@
 <?php
-$process = $trans->getTransaksiByStatus($_SESSION['the_id'], '= 1');
+$process = $trans->getTransaksiByStatus($_SESSION['the_id'], '= 2');
 $no = 1;
 ?>
 <div class="card-header py-3">
     <h6 class="mb-0">Daftar Transaksi Process</h6>
+    <div class="mb-0">
+        <small class="text-muted">
+            Transaksi yang sudah selesai, tidak dapat diubah atau dihapus.
+        </small>
+    </div>
 </div>
 <div class="card-body">
     <div class="row">
@@ -30,12 +35,8 @@ $no = 1;
                                 <td><?= $proc['alamat'] ?></td>
                                 <td><?= $func->dateIndonesia($proc['tgl_trans']) ?></td>
                                 <td align="center"><?= $proc['total_jasa'] ?></td>
-                                <td>
-                                    <div class="btn-group">
-                                        <button type="button" class="btn btn-outline-primary" onclick="detailTrans('<?= $proc['no_transaksi'] ?>', '<?= $proc['pelanggan_id'] ?>')" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Lanjutkan Transaksi"><i class="bx bx-undo fs-4"></i></button>
-                                        <button type="button" class="btn btn-outline-danger" onclick="removeNoTrans('<?= $proc['no_transaksi'] ?>')" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Hapus Transaksi"><i class="bx bx-x fs-4"></i></button>
-                                        <button type="button" class="btn btn-outline-success" onclick="doneTrans('<?= $proc['no_transaksi'] ?>')" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Transaksi Selesai"><i class="bx bx-check-circle fs-4"></i></button>
-                                    </div>
+                                <td align="center">
+                                    <span class="badge bg-success" style="cursor: pointer;" onclick="detailTransDone('<?= $proc['no_transaksi'] ?>')">Transaksi Selesai</span>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
@@ -99,5 +100,9 @@ $no = 1;
                 })
             }
         });
+    }
+
+    function detailTransDone(notrans) {
+        window.open(`printer/nota.php?notrans=${notrans}`, 'nota', 'width=800,height=600');
     }
 </script>

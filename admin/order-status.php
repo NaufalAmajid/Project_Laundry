@@ -63,13 +63,13 @@ if (isset($_SESSION['is_login'])) {
                             </div>
                             <div class="col-12 col-xl-4 order-xl-2">
                                 <div class="card-body p-4 p-sm-5">
-                                    <form class="form-body" id="form-login">
+                                    <form class="form-body" id="form-show-status">
                                         <div class="row g-3">
                                             <div class="col-12">
                                                 <label for="notrans" class="form-label">Isikan No Transaksi Anda</label>
                                                 <div class="ms-auto position-relative">
                                                     <div class="position-absolute top-50 translate-middle-y search-icon px-3"><i class="bx bx-cart-alt fs-5"></i></div>
-                                                    <input type="text" required class="form-control radius-30 ps-5" id="notrans" name="username" placeholder="Masukkan No Transaksi ..." autofocus autocomplete="off">
+                                                    <input type="text" required class="form-control radius-30 ps-5" id="notrans" name="notrans" placeholder="Masukkan No Transaksi ..." autofocus autocomplete="off">
                                                 </div>
                                             </div>
                                             <div class="col-12">
@@ -94,6 +94,7 @@ if (isset($_SESSION['is_login'])) {
                                                     <th>Status</th>
                                                 </tr>
                                             </thead>
+                                            <tbody id="list-status-laundry"></tbody>
                                         </table>
                                     </div>
                                 </div>
@@ -127,7 +128,29 @@ if (isset($_SESSION['is_login'])) {
     <script src="assets/plugins/notifications/js/notification-custom-script.js"></script>
     <script src="assets/js/sweetalert2@11.js"></script>
 
-    <script></script>
+    <script>
+        $(document).ready(function() {
+            $('#form-show-status').submit(function(e) {
+                e.preventDefault();
+                let data = $(this).serialize();
+                $.ajax({
+                    url: 'content/only-show-status-laundry.php',
+                    type: 'POST',
+                    data: {
+                        data: data,
+                        action: 'show_status'
+                    },
+                    beforeSend: function() {
+                        $('#list-status-laundry').html('<tr><td colspan="4" class="text-center"><i class="spinner-grow text-primary"></i></td></tr>');
+                    },
+                    success: function(response) {
+                        $('#list-status-laundry').html(response);
+                        $('#form-show-status')[0].reset();
+                    }
+                });
+            });
+        });
+    </script>
 
 </body>
 

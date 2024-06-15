@@ -10,17 +10,76 @@
             </ol>
         </nav>
     </div>
-    <div class="ms-auto">
-        <div class="btn-group">
-            <button type="button" class="btn btn-primary">Settings</button>
-            <button type="button" class="btn btn-primary split-bg-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown"> <span class="visually-hidden">Toggle Dropdown</span>
-            </button>
-            <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-end"> <a class="dropdown-item" href="javascript:;">Action</a>
-                <a class="dropdown-item" href="javascript:;">Another action</a>
-                <a class="dropdown-item" href="javascript:;">Something else here</a>
-                <div class="dropdown-divider"></div> <a class="dropdown-item" href="javascript:;">Separated link</a>
-            </div>
+</div>
+<!--end breadcrumb-->
+<?php
+require_once 'classes/Pengaturan.php';
+
+$set = new Pengaturan();
+$set = $set->getPengaturan();
+?>
+<div class="col-xl-6 mx-auto">
+    <h6 class="mb-0 text-uppercase">Profile User</h6>
+    <hr />
+    <div class="card">
+        <div class="card-body">
+            <form class="row g-3" id="form-setting">
+                <div class="col-12">
+                    <label class="form-label">Nama Usaha</label>
+                    <input type="text" class="form-control form-control-lg" name="nama_usaha" value="<?= ucwords($set['nama_usaha']) ?>">
+                </div>
+                <div class="col-12">
+                    <label class="form-label">Alamat</label>
+                    <input type="text" class="form-control form-control-lg" name="alamat" value="<?= ucwords($set['alamat']) ?>">
+                </div>
+                <div class="col-12">
+                    <label class="form-label">Email</label>
+                    <input type="text" class="form-control form-control-lg" name="email" value="<?= $set['email'] ?>">
+                </div>
+                <div class="col-12">
+                    <label class="form-label">No Telepon</label>
+                    <input type="text" class="form-control form-control-lg" name="no_telepon" value="<?= $set['no_telepon'] ?>">
+                </div>
+                <div class="col-12">
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">Simpan</button>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 </div>
-<!--end breadcrumb-->
+<script>
+    $(document).ready(function() {
+        $('#form-setting').submit(function(e) {
+            e.preventDefault();
+            let data = $(this).serialize();
+            $.ajax({
+                url: 'classes/Pengaturan.php',
+                type: 'POST',
+                data: {
+                    data: data,
+                    page: 'update-setting'
+                },
+                success: function(data) {
+                    let result = JSON.parse(data);
+                    Lobibox.notify(`${result.status}`, {
+                        pauseDelayOnHover: true,
+                        size: "mini",
+                        rounded: true,
+                        delayIndicator: false,
+                        delay: 2000,
+                        icon: `bx bx-${result.icon}`,
+                        continueDelayOnInactiveTab: false,
+                        sound: false,
+                        position: "center top",
+                        msg: result.msg,
+                    });
+                    setTimeout(() => {
+                        location.reload();
+                    }, 2000);
+                }
+            });
+        });
+    });
+</script>
