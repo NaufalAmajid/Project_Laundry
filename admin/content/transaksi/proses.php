@@ -121,6 +121,7 @@ $no = 1;
                         no_transaksi: no_transaksi
                     },
                     success: function(response) {
+                        console.log(response);
                         let res = JSON.parse(response);
                         Lobibox.notify(`${res.status}`, {
                             pauseDelayOnHover: true,
@@ -132,11 +133,13 @@ $no = 1;
                             continueDelayOnInactiveTab: false,
                             sound: false,
                             position: "center top",
-                            msg: `${res.message}`
+                            msg: `${res.msg}`
                         });
-                        setTimeout(() => {
-                            location.reload();
-                        }, 2500);
+                        if (res.status == 'success') {
+                            setTimeout(() => {
+                                location.reload();
+                            }, 2500);
+                        }
                     }
                 })
             }

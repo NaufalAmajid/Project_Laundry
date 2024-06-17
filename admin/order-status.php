@@ -90,6 +90,7 @@ if (isset($_SESSION['is_login'])) {
                                                 <tr>
                                                     <th>Jasa</th>
                                                     <th>Jml</th>
+                                                    <th>Harga</th>
                                                     <th>Total</th>
                                                     <th>Status</th>
                                                 </tr>
@@ -141,11 +142,12 @@ if (isset($_SESSION['is_login'])) {
                         action: 'show_status'
                     },
                     beforeSend: function() {
-                        $('#list-status-laundry').html('<tr><td colspan="4" class="text-center"><i class="spinner-grow text-primary"></i></td></tr>');
+                        $('#list-status-laundry').html('<tr><td colspan="5" class="text-center"><i class="spinner-grow text-primary"></i></td></tr>');
                     },
                     success: function(response) {
                         $('#list-status-laundry').html(response);
                         $('#form-show-status')[0].reset();
+                        $('#notrans').focus();
                     }
                 });
             });

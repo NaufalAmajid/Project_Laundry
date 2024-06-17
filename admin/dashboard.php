@@ -300,6 +300,10 @@ $func = new Functions();
             $('.select2.custom-border-bottom').next('.select2-container').addClass('custom-border-bottom');
         });
 
+        $(document).on('select2:open', () => {
+            document.querySelector('.select2-search__field').focus();
+        });
+
         function Logout() {
             Swal.fire({
                 title: "Apakah anda yakin?",

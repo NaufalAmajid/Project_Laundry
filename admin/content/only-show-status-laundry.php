@@ -16,6 +16,7 @@ $transaksi = $transaksi->getTransaksiByNo($data['notrans']);
     <tr>
         <td><?= ucwords($trans['nama_jasa']) ?></td>
         <td><?= $trans['jumlah'] ?></td>
+        <td><?= $func->currency($trans['harga_satuan']) ?></td>
         <td><?= $func->currency($trans['total']) ?></td>
         <td>
             <?php if (is_null($trans['status_transaksi'])) : ?>

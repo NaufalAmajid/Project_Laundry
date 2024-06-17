@@ -73,24 +73,30 @@ class Transaksi
     public function getTransaksiByNo($notrans)
     {
         $query = "select
-                        dt.id as detail_id,
-                        dt.status_transaksi,
-                        trans.no_transaksi,
-                        depel.nama_pelanggan,
-                        dj.nama_jasa,
-                        dt.jumlah,
-                        dj.harga_satuan,
-                        (dj.harga_satuan * dt.jumlah) as total
-                    from
-                        transaksi trans
-                    inner join detail_transaksi dt on
-                        trans.no_transaksi = dt.no_transaksi
-                    inner join detail_pelanggan depel on
-                        trans.pelanggan_id = depel.pelanggan_id
-                    inner join daftar_jasa dj on
-                        dt.jasa_id = dj.jasa_id
-                    where
-                        trans.no_transaksi = :no_transaksi";
+                    dt.id as detail_id,
+                    dt.status_transaksi,
+                    trans.no_transaksi,
+                    depel.nama_pelanggan,
+                    dj.nama_jasa,
+                    dt.jumlah,
+                    dj.harga_satuan,
+                    (dj.harga_satuan * dt.jumlah) as total,
+                    date_format(trans.created_at, '%Y-%m-%d') AS tgl_trans,
+                    date_format(trans.created_at, '%H:%i') as jam_trans,
+                    depel.*,
+                    depem.*
+                from
+                    transaksi trans
+                inner join detail_transaksi dt on
+                    trans.no_transaksi = dt.no_transaksi
+                inner join detail_pelanggan depel on
+                    trans.pelanggan_id = depel.pelanggan_id
+                inner join detail_pemilik depem on
+                    trans.pemilik_id = depem.pemilik_id
+                inner join daftar_jasa dj on
+                    dt.jasa_id = dj.jasa_id
+                where
+                    trans.no_transaksi = :no_transaksi";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':no_transaksi', $notrans);
         $stmt->execute();
@@ -127,6 +133,13 @@ class Transaksi
         $res = $db->add('detail_transaksi', $data);
         $id = $this->conn->lastInsertId();
         return $id;
+    }
+
+    public function addHistoryTrans($data)
+    {
+        $db = DB::getInstance();
+        $res = $db->add('riwayat_transaksi', $data);
+        return $res;
     }
 
     public function editTransaksi($table, $data, $where)
@@ -237,5 +250,60 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         } else {
             echo json_encode(['status' => 'error', 'message' => 'Transaksi gagal dihapus', 'icon' => 'bx bx-error-circle']);
         }
+    }
+
+    if ($_POST['action'] == 'done_no_transaksi') {
+        $getDetailTrans = $transaksi->getTransaksiByNo($_POST['no_transaksi']);
+        $saveSuccess = 0;
+        $saveFailed = 0;
+        foreach ($getDetailTrans as $dt) {
+            $dataHistory = [
+                'no_transaksi' => $dt['no_transaksi'],
+                'nama_pelanggan' => $dt['nama_pelanggan'],
+                'alamat' => $dt['alamat'],
+                'jenis_kelamin' => $dt['jenis_kelamin'],
+                'no_hp' => $dt['no_hp'],
+                'nama_pemilik' => $dt['nama_pemilik'],
+                'nama_jasa' => $dt['nama_jasa'],
+                'harga_satuan' => $dt['harga_satuan'],
+                'jumlah' => $dt['jumlah'],
+                'transaksi_date' => $dt['tgl_trans'] . ' ' . $dt['jam_trans'],
+            ];
+            $save = $transaksi->addHistoryTrans($dataHistory);
+            if ($save) {
+                $saveSuccess++;
+            } else {
+                $saveFailed++;
+            }
+        }
+
+        if (count($getDetailTrans) == $saveSuccess) {
+            $where = [
+                'no_transaksi' => $_POST['no_transaksi']
+            ];
+            $editStatus = [
+                'status_transaksi' => 2
+            ];
+            $editNoTrans = $transaksi->editTransaksi('transaksi', $editStatus, $where);
+            $editDetailTrans = $transaksi->editTransaksi('detail_transaksi', $editStatus, $where);
+        } else {
+            $editNoTrans = 0;
+            $editDetailTrans = 0;
+        }
+
+        if (count($getDetailTrans) == $saveSuccess) {
+            $response = [
+                'status' => 'success',
+                'msg' => 'Transaksi Berhasil Selesai dan Disimpan ke Riwayat Transaksi.',
+                'icon' => 'bx bx-check'
+            ];
+        } else {
+            $response = [
+                'status' => 'error',
+                'msg' => 'Transaksi Gagal Selesai.',
+                'icon' => 'bx bx-error-circle'
+            ];
+        }
+        echo json_encode($response);
     }
 }
