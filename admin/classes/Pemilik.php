@@ -79,6 +79,29 @@ class Pemilik
 
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+
+    public function getTransaksiByPemilikId($pemilik_id)
+    {
+        $query = "SELECT
+                        *
+                    FROM
+                        detail_transaksi dt
+                    JOIN transaksi trans ON
+                        dt.no_transaksi = trans.no_transaksi
+                    WHERE
+                        trans.pemilik_id = :pemilik_id
+                        AND (dt.status_transaksi IS NULL
+                            OR dt.status_transaksi = 1)";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam("pemilik_id", $pemilik_id);
+        $stmt->execute();
+
+        $transaksi = [];
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $transaksi[] = $row;
+        }
+        return $transaksi;
+    }
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -146,6 +169,31 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             echo json_encode(['status' => 'success', 'message' => 'User dan pemilik berhasil diubah', 'icon' => 'bx bx-check-circle']);
         } else {
             echo json_encode(['status' => 'error', 'message' => 'User dan pemilik gagal diubah', 'icon' => 'bx bx-error-circle']);
+        }
+    }
+
+    if ($_POST['action'] == 'delete_pemilik') {
+        $checkTransaksi = $pemilik->getTransaksiByPemilikId($_POST['pemilik_id']);
+        if (count($checkTransaksi) > 0) {
+            $transPending = 0;
+            $transProcess = 0;
+            foreach ($checkTransaksi as $ct) {
+                if (is_null($ct['status_transaksi'])) {
+                    $transPending++;
+                } else {
+                    $transProcess++;
+                }
+            }
+            echo json_encode(['status' => 'info', 'message' => "Pemilik tidak bisa dihapus karena masih memiliki transaksi dengan status <br> - Pending: $transPending <br> - Process: $transProcess", 'time' => 5000]);
+            exit;
+        } else {
+            $editUser = $pemilik->updatePemilik('user', ['is_active' => 0], ['user_id' => $_POST['user_id']]);
+
+            if ($editUser) {
+                echo json_encode(['status' => 'success', 'message' => 'Pemilik berhasil dihapus', 'time' => 2000]);
+            } else {
+                echo json_encode(['status' => 'error', 'message' => 'Pemilik gagal dihapus', 'time' => 2000]);
+            }
         }
     }
 }

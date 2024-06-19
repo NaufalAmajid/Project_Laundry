@@ -107,7 +107,7 @@ require_once 'classes/Pemilik.php';
                                             <td>
                                                 <div class="btn-group">
                                                     <button type="button" class="btn btn-outline-primary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Detail User" onclick="detailPemilik('<?= $pem['pemilik_id'] ?>')"><i class="bx bx-info-circle fs-4"></i></button>
-                                                    <button type="button" class="btn btn-outline-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Non-aktif User" onclick="deletePemilik('<?= $pem['pemilik_id'] ?>')"><i class="bx bx-x fs-4"></i></button>
+                                                    <button type="button" class="btn btn-outline-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Non-aktif User" onclick="deletePemilik('<?= $pem['pemilik_id'] ?>', '<?= $pem['user_id'] ?>')"><i class="bx bx-x fs-4"></i></button>
                                                 </div>
                                             </td>
                                         </tr>
@@ -219,6 +219,50 @@ require_once 'classes/Pemilik.php';
                 $('#my-modal-centered').html(response);
                 $('#my-modal-centered').modal('show');
                 $('[data-bs-toggle="tooltip"]').tooltip('hide');
+            }
+        })
+    }
+
+    function deletePemilik(pemilik_id, user_id) {
+        Swal.fire({
+            title: "Apakah anda yakin?",
+            text: "User atau pemilik yang dihapus tidak bisa dikembalikan!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Ya, Hapus!",
+            cancelButtonText: "Batal"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: 'classes/Pemilik.php',
+                    type: 'POST',
+                    data: {
+                        action: 'delete_pemilik',
+                        pemilik_id: pemilik_id,
+                        user_id: user_id
+                    },
+                    success: function(response) {
+                        let res = JSON.parse(response);
+                        Swal.fire({
+                            title: res.status == 'success' ? 'Berhasil' : 'Gagal',
+                            html: res.message,
+                            icon: res.status,
+                            showConfirmButton: false,
+                            timer: res.time,
+                            showCancelButton: false,
+                            showConfirmButton: false,
+                            allowOutsideClick: false,
+                        }).then((e) => {
+                            if (e.dismiss === Swal.DismissReason.timer) {
+                                if (res.status == 'success') {
+                                    location.reload();
+                                }
+                            }
+                        })
+                    }
+                })
             }
         })
     }

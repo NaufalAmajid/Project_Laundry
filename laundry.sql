@@ -32,7 +32,7 @@ CREATE TABLE `daftar_jasa` (
   `nama_jasa` varchar(100) DEFAULT NULL,
   `harga_satuan` int(11) DEFAULT NULL,
   `is_active` int(11) DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data untuk tabel `daftar_jasa`
@@ -56,7 +56,7 @@ CREATE TABLE `detail_pelanggan` (
   `alamat` text DEFAULT NULL,
   `jenis_kelamin` enum('Laki-laki','Perempuan') DEFAULT NULL,
   `no_hp` varchar(15) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data untuk tabel `detail_pelanggan`
@@ -77,7 +77,7 @@ CREATE TABLE `detail_pemilik` (
   `pemilik_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `nama_pemilik` varchar(100) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data untuk tabel `detail_pemilik`
@@ -99,7 +99,7 @@ CREATE TABLE `detail_transaksi` (
   `jumlah` varchar(10) DEFAULT NULL,
   `status_transaksi` int(11) DEFAULT NULL,
   `created_at` datetime DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data untuk tabel `detail_transaksi`
@@ -127,7 +127,7 @@ CREATE TABLE `hak_akses` (
   `id` int(11) NOT NULL,
   `role_id` int(11) NOT NULL,
   `menu_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data untuk tabel `hak_akses`
@@ -153,7 +153,7 @@ CREATE TABLE `menu` (
   `nama_menu` varchar(20) DEFAULT NULL,
   `direktori` varchar(20) DEFAULT NULL,
   `icon` varchar(50) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data untuk tabel `menu`
@@ -179,7 +179,7 @@ CREATE TABLE `pengaturan` (
   `alamat` text DEFAULT NULL,
   `email` varchar(100) DEFAULT NULL,
   `no_telepon` varchar(20) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data untuk tabel `pengaturan`
@@ -206,7 +206,7 @@ CREATE TABLE `riwayat_transaksi` (
   `harga_satuan` int(11) DEFAULT NULL,
   `jumlah` varchar(10) DEFAULT NULL,
   `status_transaksi` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -217,7 +217,7 @@ CREATE TABLE `riwayat_transaksi` (
 CREATE TABLE `role_user` (
   `role_id` int(11) NOT NULL,
   `nama_role` varchar(20) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data untuk tabel `role_user`
@@ -238,7 +238,7 @@ CREATE TABLE `submenu` (
   `nama_submenu` varchar(20) DEFAULT NULL,
   `menu_id` int(11) NOT NULL,
   `direktori` varchar(50) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data untuk tabel `submenu`
@@ -259,7 +259,7 @@ CREATE TABLE `transaksi` (
   `pemilik_id` int(11) NOT NULL,
   `created_at` datetime DEFAULT current_timestamp(),
   `status_transaksi` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data untuk tabel `transaksi`
@@ -286,7 +286,7 @@ CREATE TABLE `user` (
   `password` text DEFAULT NULL,
   `role_id` int(11) NOT NULL,
   `is_active` int(11) DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data untuk tabel `user`
