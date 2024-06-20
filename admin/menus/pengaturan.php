@@ -12,12 +12,6 @@
     </div>
 </div>
 <!--end breadcrumb-->
-<?php
-require_once 'classes/Pengaturan.php';
-
-$set = new Pengaturan();
-$set = $set->getPengaturan();
-?>
 <div class="col-xl-6 mx-auto">
     <h6 class="mb-0 text-uppercase">Pengaturan Profile Usaha</h6>
     <hr />

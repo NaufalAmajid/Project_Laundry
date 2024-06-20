@@ -11,8 +11,11 @@ require_once 'config/connection.php';
 require_once 'config/functions.php';
 require_once 'classes/DB.php';
 require_once 'classes/Menu.php';
+require_once 'classes/Pengaturan.php';
 
 $func = new Functions();
+$set = new Pengaturan();
+$set = $set->getPengaturan();
 ?>
 <!doctype html>
 <html lang="en">
@@ -126,7 +129,11 @@ $func = new Functions();
                 <div class="dropdown dropdown-user-setting">
                     <a class="dropdown-toggle dropdown-toggle-nocaret" href="#" data-bs-toggle="dropdown">
                         <div class="user-setting d-flex align-items-center gap-3">
-                            <img src="assets/images/avatars/avatar-1.png" class="user-img" alt="">
+                            <?php if ($_SESSION['role_id'] == 1) : ?>
+                                <img src="assets/images/avatars/avatar-pemilik.png" class="user-img" alt="">
+                            <?php else : ?>
+                                <img src="assets/images/avatars/avatar-pelanggan.png" class="user-img" alt="">
+                            <?php endif; ?>
                             <div class="d-none d-sm-block">
                                 <p class="user-name mb-0"><?= ucwords($_SESSION['nama']) ?></p>
                                 <small class="mb-0 dropdown-user-designation"><?= ucwords($_SESSION['nama_role']) ?></small>
@@ -176,9 +183,10 @@ $func = new Functions();
                     <img src="assets/images/logo-icon.png" class="logo-icon" alt="logo icon">
                 </div>
                 <div>
-                    <h4 class="logo-text">Laund</h4>
+                    <h4 class="logo-text fs-6"><?= ucwords($set['nama_usaha']) ?></h4>
+                    <small class="text-description"><?= $set['email'] ?></small>
                 </div>
-                <div class="toggle-icon ms-auto"><i class="bi bi-list"></i>
+                <div class="toggle-icon ms-auto"><i class="bx bx-menu-alt-right"></i>
                 </div>
             </div>
             <!--navigation-->

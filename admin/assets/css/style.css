@@ -476,6 +476,14 @@ a {
     color: #3461ff;
 }
 
+.sidebar-wrapper .sidebar-header  .text-description {
+    font-size: 8px;
+    margin-left: 10px;
+    margin-bottom: 0;
+    letter-spacing: 1px;
+    color: #0036fa;
+}
+
 .toggle-icon {
     font-size: 26px;
     cursor: pointer;
