@@ -184,7 +184,6 @@ $set = $set->getPengaturan();
                 </div>
                 <div>
                     <h4 class="logo-text fs-6"><?= ucwords($set['nama_usaha']) ?></h4>
-                    <small class="text-description"><?= $set['email'] ?></small>
                 </div>
                 <div class="toggle-icon ms-auto"><i class="bx bx-menu-alt-right"></i>
                 </div>
@@ -294,9 +293,9 @@ $set = $set->getPengaturan();
     <script src="assets/plugins/notifications/js/notifications.min.js"></script>
     <script src="assets/plugins/select2/js/select2.min.js"></script>
     <!-- example from plugin -->
-    <script src="assets/plugins/notifications/js/notification-custom-script.js"></script>
+    <!-- <script src="assets/plugins/notifications/js/notification-custom-script.js"></script>
     <script src="assets/js/table-datatable.js"></script>
-    <script src="assets/js/form-select2.js"></script>
+    <script src="assets/js/form-select2.js"></script> -->
     <!--app-->
     <script src="assets/js/app.js"></script>
     <script src="assets/js/custom_function.js"></script>

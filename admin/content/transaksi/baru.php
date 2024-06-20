@@ -123,7 +123,11 @@ $desc = $trans->getDescriptionTrans($_GET['notrans']);
                 <div class="col-12 col-lg-12 text-md-end">
                     <div class="mb-0">
                         <?php if ($desc) : ?>
-                            <a href="javascript:;" onclick="printNota()" class="btn btn-sm btn-secondary"><i class="bx bx-printer"></i> Cetak Nota</a>
+                            <?php if (is_null($desc['status_transaksi'])) : ?>
+                                <a href="javascript:;" onclick="changeStatusTrans()" class="btn btn-sm btn-secondary"><i class="bx bx-printer"></i> Cetak Nota</a>
+                            <?php else : ?>
+                                <a href="javascript:;" onclick="printNota()" class="btn btn-sm btn-secondary"><i class="bx bx-printer"></i> Cetak Nota</a>
+                            <?php endif; ?>
                         <?php else : ?>
                             <a href="javascript:;" onclick="changeStatusTrans()" class="btn btn-sm btn-secondary"><i class="bx bx-printer"></i> Cetak Nota</a>
                         <?php endif; ?>

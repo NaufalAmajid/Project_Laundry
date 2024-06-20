@@ -136,3 +136,133 @@ $dashboard = new Dashboard();
         </div>
     </div>
 </div>
+<div class="row">
+    <div class="col-12 col-lg-12 d-flex">
+        <div class="card radius-10 w-100">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <h6 class="mb-0">Pendapatan</h6>
+                    <div class="fs-5 ms-auto dropdown">
+                        <div class="dropdown-toggle dropdown-toggle-nocaret cursor-pointer" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></div>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">Action</a></li>
+                            <li><a class="dropdown-item" href="#">Another action</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="#">Something else here</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div id="chart5"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="assets/plugins/chartjs/js/Chart.min.js"></script>
+<script src="assets/plugins/chartjs/js/Chart.extension.js"></script>
+<script src="assets/plugins/apexcharts-bundle/js/apexcharts.min.js"></script>
+<script>
+    $(function() {
+        var options = {
+            series: [{
+                name: "Pendapatan",
+                data: [240, 460, 171, 657, 160, 471, 340, 230, 458, 98, 105, 1000]
+            }],
+            chart: {
+                type: "area",
+                // width: 130,
+                stacked: true,
+                height: 280,
+                toolbar: {
+                    show: !1
+                },
+                zoom: {
+                    enabled: !1
+                },
+                dropShadow: {
+                    enabled: 0,
+                    top: 3,
+                    left: 14,
+                    blur: 4,
+                    opacity: .12,
+                    color: "#3461ff"
+                },
+                sparkline: {
+                    enabled: !1
+                }
+            },
+            markers: {
+                size: 0,
+                colors: ["#3461ff"],
+                strokeColors: "#fff",
+                strokeWidth: 2,
+                hover: {
+                    size: 7
+                }
+            },
+            plotOptions: {
+                bar: {
+                    horizontal: !1,
+                    columnWidth: "25%",
+                    //endingShape: "rounded"
+                }
+            },
+            dataLabels: {
+                enabled: !1
+            },
+            stroke: {
+                show: !0,
+                width: [2.5],
+                //colors: ["#3461ff"],
+                curve: "smooth"
+            },
+            fill: {
+                type: 'gradient',
+                gradient: {
+                    shade: 'light',
+                    type: 'vertical',
+                    shadeIntensity: 0.5,
+                    gradientToColors: ['#3361ff'],
+                    inverseColors: false,
+                    opacityFrom: 0.7,
+                    opacityTo: 0.1,
+                    // stops: [0, 100]
+                }
+            },
+            colors: ["#3361ff"],
+            xaxis: {
+                categories: ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"]
+            },
+            grid: {
+                show: true,
+                borderColor: 'rgba(66, 59, 116, 0.15)',
+            },
+            responsive: [{
+                breakpoint: 1000,
+                options: {
+                    chart: {
+                        type: "area",
+                        // width: 130,
+                        stacked: true,
+                    }
+                }
+            }],
+            legend: {
+                show: false
+            },
+            tooltip: {
+                theme: "dark",
+                y: {
+                    formatter: function(val) {
+                        return "Rp " + val + "K"
+                    },
+                },
+
+            }
+        };
+
+        var chart = new ApexCharts(document.querySelector("#chart5"), options);
+        chart.render();
+    })
+</script>
