@@ -1,4 +1,5 @@
 <?php
+error_reporting(0);
 $desc = $trans->getDescriptionTrans($_GET['notrans']);
 ?>
 <input type="hidden" name="pemilik_id" id="pemilik_id" value="<?= $_SESSION['the_id'] ?>">
