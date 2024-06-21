@@ -36,6 +36,18 @@ $no = 1;
 <?php endforeach; ?>
 <script>
     function detailTrans(no_transaksi) {
-        alert(no_transaksi);
+        $.ajax({
+            url: 'content/modal-detail-transaksi.php',
+            type: 'POST',
+            data: {
+                no_transaksi: no_transaksi,
+                action: 'detail_transaksi'
+            },
+            success: function(response) {
+                $('#my-modal-centered').html(response);
+                $('#my-modal-centered').modal('show');
+                $('[data-bs-toggle="tooltip"]').tooltip('hide');
+            }
+        })
     }
 </script>
