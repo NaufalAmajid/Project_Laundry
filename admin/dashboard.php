@@ -154,7 +154,7 @@ $set = $set->getPengaturan();
                                 <a class="dropdown-item" href="?page=pengaturan">
                                     <div class="d-flex align-items-center">
                                         <div class=""><i class="bi bi-gear-fill"></i></div>
-                                        <div class="ms-3"><span>Setting</span></div>
+                                        <div class="ms-3"><span>Pengaturan</span></div>
                                     </div>
                                 </a>
                             </li>
