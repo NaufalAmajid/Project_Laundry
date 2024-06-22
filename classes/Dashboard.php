@@ -111,6 +111,8 @@ class Dashboard
                     YEAR(created_at) AS year
                 FROM
                     transaksi
+                WHERE
+                    status_transaksi = 2
                 GROUP BY
                     YEAR(created_at)
                 ORDER BY
