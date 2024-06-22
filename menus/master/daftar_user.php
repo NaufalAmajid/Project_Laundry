@@ -42,6 +42,9 @@ require_once 'classes/Pemilik.php';
                 </ul>
                 <div class="tab-content py-3">
                     <div class="tab-pane fade show active" id="daftar_pelanggan" role="tabpanel">
+                        <div class="mb-4">
+                            <button type="button" class="btn btn-primary" onclick="showFormAddPelanggan()"><i class='bx bx-plus'></i> Tambah Pelanggan</button>
+                        </div>
                         <div class="table-responsive">
                             <table class="table table-striped align-middle" id="table-user-pelanggan">
                                 <thead class="table-light">
@@ -199,6 +202,17 @@ require_once 'classes/Pemilik.php';
     function showFormAddPemilik() {
         $.ajax({
             url: 'content/modal-pemilik.php',
+            success: function(response) {
+                $('#my-modal-centered').html(response);
+                $('#my-modal-centered').modal('show');
+                $('[data-bs-toggle="tooltip"]').tooltip('hide');
+            }
+        })
+    }
+
+    function showFormAddPelanggan() {
+        $.ajax({
+            url: 'content/modal-add-pelanggan.php',
             success: function(response) {
                 $('#my-modal-centered').html(response);
                 $('#my-modal-centered').modal('show');

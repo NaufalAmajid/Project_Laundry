@@ -42,6 +42,7 @@ class Jasa
                     dj.nama_jasa,
                     dj.harga_satuan,
                     dj.is_active,
+                    dj.satuan,
                     COUNT(CASE WHEN dt.status_transaksi IS NULL THEN dt.id END) AS jumlah_orderan_pending,
                     COUNT(CASE WHEN dt.status_transaksi = 1 THEN dt.id END) AS jumlah_orderan_proses,
                     COUNT(CASE WHEN dt.status_transaksi = 2 THEN dt.id END) AS jumlah_orderan_selesai
@@ -53,6 +54,7 @@ class Jasa
                     dj.jasa_id,
                     dj.nama_jasa,
                     dj.harga_satuan,
+                    dj.satuan,
                     dj.is_active";
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
@@ -85,6 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if ($_POST['action'] == 'add_jasa') {
         $data = [
             'nama_jasa' => $_POST['nama_jasa'],
+            'satuan' => $_POST['satuan'],
             'harga_satuan' => $_POST['harga_satuan'],
         ];
 
@@ -104,6 +107,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if ($_POST['action'] == 'update_jasa') {
         $data = [
             'nama_jasa' => $_POST['nama_jasa'],
+            'satuan' => $_POST['satuan'],
             'harga_satuan' => $_POST['harga_satuan'],
         ];
 

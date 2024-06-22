@@ -121,7 +121,6 @@ $no = 1;
                         no_transaksi: no_transaksi
                     },
                     success: function(response) {
-                        console.log(response);
                         let res = JSON.parse(response);
                         Lobibox.notify(`${res.status}`, {
                             pauseDelayOnHover: true,

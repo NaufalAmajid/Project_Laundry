@@ -37,6 +37,7 @@ class Login
                     WHERE
                         usr.username = '$data[username]'
                         AND usr.password = '$password'
+                        AND usr.role_id = 1
                         AND usr.is_active = 1";
         $stmt = $this->conn->prepare($query);
         $stmt->execute();

@@ -33,6 +33,10 @@ $no   = 1;
                                 <input type="text" class="form-control" placeholder="nama jasa ..." name="nama_jasa">
                             </div>
                             <div class="col-12">
+                                <label class="form-label">Satuan</label>
+                                <input type="text" class="form-control" placeholder="satuan ..." name="satuan">
+                            </div>
+                            <div class="col-12">
                                 <label class="form-label">Harga Satuan</label>
                                 <input type="text" class="form-control" placeholder="harga satuan ..." name="harga_satuan_display" onkeyup="justNumberWithCurrency(this)">
                                 <input type="hidden" name="harga_satuan" id="harga_satuan">
@@ -55,6 +59,7 @@ $no   = 1;
                                     <tr>
                                         <th>No</th>
                                         <th>Nama Jasa</th>
+                                        <th>Satuan</th>
                                         <th>Harga Satuan</th>
                                         <th>Order</th>
                                         <th></th>
@@ -65,6 +70,7 @@ $no   = 1;
                                         <tr>
                                             <td><?= $no++ ?></td>
                                             <td><?= $jas['nama_jasa'] ?></td>
+                                            <td><?= $jas['satuan'] ?></td>
                                             <td><?= $func->currency($jas['harga_satuan']) ?></td>
                                             <td>
                                                 <?php if ($jas['is_active'] == 1) : ?>
@@ -113,12 +119,17 @@ $no   = 1;
     function addJasa() {
         let form = $('#form-jasa').serializeArray();
         let data = {};
+        let empty = [];
         $.each(form, function(i, field) {
-            data[field.name] = field.value;
+            if (field.value == '') {
+                empty.push(field.name);
+            } else {
+                data[field.name] = field.value;
+            }
         });
         data['action'] = 'add_jasa';
 
-        if (data['nama_jasa'] == '' || data['harga_satuan'] == '') {
+        if (empty.length > 0) {
             Lobibox.notify("warning", {
                 pauseDelayOnHover: true,
                 size: "mini",
@@ -129,7 +140,7 @@ $no   = 1;
                 continueDelayOnInactiveTab: false,
                 sound: false,
                 position: "top right",
-                msg: "Nama jasa dan harga satuan tidak boleh kosong",
+                msg: `Field ${empty.join(', ')} tidak boleh kosong`,
             });
             return;
         } else {
@@ -173,6 +184,7 @@ $no   = 1;
                     maximumFractionDigits: 0
                 }).format(result.harga_satuan);
                 $('input[name="nama_jasa"]').val(result.nama_jasa);
+                $('input[name="satuan"]').val(result.satuan);
                 $('input[name="harga_satuan_display"]').val(harga);
                 $('input[name="harga_satuan"]').val(result.harga_satuan);
                 $('#btn-jasa').html('Update Jasa');

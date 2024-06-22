@@ -23,7 +23,7 @@ $laporan = $laporan->getLaporan($data);
             <td><?= ucwords($data['nama_jasa']) ?></td>
             <td><?= $func->currency($data['harga_satuan']) ?></td>
             <td><?= $data['jumlah'] ?></td>
-            <td><?= $func->currency($data['harga_satuan'] * $data['jumlah']) ?></td>
+            <td><?= $func->currency($data['total']) ?></td>
             <td><?= $func->dateIndonesia($data['tgl_trans']) ?></td>
             <td><?= $func->dateIndonesia($data['tgl_selesai']) ?></td>
         </tr>

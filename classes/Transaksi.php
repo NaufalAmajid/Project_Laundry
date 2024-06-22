@@ -80,6 +80,7 @@ class Transaksi
                     dj.nama_jasa,
                     dt.jumlah,
                     dj.harga_satuan,
+                    dj.satuan,
                     (dj.harga_satuan * dt.jumlah) as total,
                     date_format(trans.created_at, '%Y-%m-%d') AS tgl_trans,
                     date_format(trans.created_at, '%H:%i') as jam_trans,
@@ -266,7 +267,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 'nama_pemilik' => $dt['nama_pemilik'],
                 'nama_jasa' => $dt['nama_jasa'],
                 'harga_satuan' => $dt['harga_satuan'],
-                'jumlah' => $dt['jumlah'],
+                'jumlah' => $dt['jumlah'] . ' ' . $dt['satuan'],
+                'total' => $dt['total'],
                 'transaksi_date' => $dt['tgl_trans'] . ' ' . $dt['jam_trans'],
             ];
             $save = $transaksi->addHistoryTrans($dataHistory);

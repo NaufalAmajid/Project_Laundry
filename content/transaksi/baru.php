@@ -94,12 +94,12 @@ $desc = $trans->getDescriptionTrans($_GET['notrans']);
                                             <select name="jasa" id="jasa" class="select2 custom-border-bottom form-control" onchange="transOperation()">
                                                 <option value="">-- Pilih Jasa --</option>
                                                 <?php foreach ($jasa->getAllJasaTrans() as $jasa) : ?>
-                                                    <option value="<?= $jasa['jasa_id'] ?>" data-harga="<?= $jasa['harga_satuan'] ?>"><?= ucwords($jasa['nama_jasa']) ?></option>
+                                                    <option value="<?= $jasa['jasa_id'] ?>" data-harga="<?= $jasa['harga_satuan'] ?>" data-satuan="<?= $jasa['satuan'] ?>"><?= ucwords($jasa['nama_jasa']) ?></option>
                                                 <?php endforeach; ?>
                                             </select>
                                         </td>
                                         <td align="center" id="disHargaSatuan">0</td>
-                                        <td align="center"><input type="text" name="quantity" id="quantity" class="input-border-bottom-center" size="3" placeholder="Jml" onkeyup="transOperation(true)" autocomplete="off"></td>
+                                        <td align="center"><input type="text" name="quantity" id="quantity" class="input-border-bottom-center" size="3" placeholder="..." onkeyup="transOperation(true)" autocomplete="off"><span id="satuan"></span></td>
                                         <td align="center" id="disTotal">0</td>
                                         <td align="center"><a href="javascript:;" class="text-primary d-none" id="btn-addTrans" onclick="addTransaksi()"><i class="bx bx-download fs-5"></i></a></td>
                                     </thead>
@@ -176,8 +176,11 @@ $desc = $trans->getDescriptionTrans($_GET['notrans']);
             }
         }
 
+        let satuan = jasa.data('satuan');
+
         $('#disHargaSatuan').text(disHargaSatuan);
         $('#disTotal').text(total);
+        $('#satuan').text(satuan);
     }
 
     listJasaTransaksi();

@@ -94,7 +94,7 @@ class PDF extends FPDF
             $this->Cell(1, 0.5, $no++, 0, 0, 'C');
             $this->Cell(9, 0.5, $tr['nama_jasa'], 0, 0, 'L');
             $this->Cell(3, 0.5, $func->currency($tr['harga_satuan']), 0, 0, 'C');
-            $this->Cell(3, 0.5, $tr['jumlah'], 0, 0, 'C');
+            $this->Cell(3, 0.5, $tr['jumlah'] . ' ' . $tr['satuan'], 0, 0, 'C');
             $this->Cell(3, 0.5, $func->currency($tr['total']), 0, 0, 'C');
             $totalAll += $tr['total'];
         }

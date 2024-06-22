@@ -2,9 +2,9 @@
 
 class Database
 {
-    private $host = "localhost";
+    private $host = "localhost:3307";
     private $user = "root";
-    private $pass = "";
+    private $pass = "root";
     private $db = "laundry";
     public $conn;
 

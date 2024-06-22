@@ -17,7 +17,7 @@ $totalAll = 0;
         <th><a href="javascript:;" class="text-danger" onclick="removeJasaTrans('<?= $tr['detail_id'] ?>')"><i class="bx bx-trash"></i></a></th>
         <td><?= $tr['nama_jasa'] ?></td>
         <td align="center"><?= $func->currency($tr['harga_satuan']) ?></td>
-        <td align="center"><?= $tr['jumlah'] ?></td>
+        <td align="center"><?= $tr['jumlah'] ?> <?= $tr['satuan'] ?></td>
         <td align="center" colspan="2"><?= $func->currency($tr['total']) ?></td>
     </tr>
     <?php $totalAll += $tr['total']; ?>

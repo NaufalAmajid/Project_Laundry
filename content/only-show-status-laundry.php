@@ -15,7 +15,7 @@ $transaksi = $transaksi->getTransaksiByNo($data['notrans']);
 <?php foreach ($transaksi as $trans) : ?>
     <tr>
         <td><?= ucwords($trans['nama_jasa']) ?></td>
-        <td><?= $trans['jumlah'] ?></td>
+        <td><?= $trans['jumlah'] ?> <?= $trans['satuan'] ?></td>
         <td><?= $func->currency($trans['harga_satuan']) ?></td>
         <td><?= $func->currency($trans['total']) ?></td>
         <td>
