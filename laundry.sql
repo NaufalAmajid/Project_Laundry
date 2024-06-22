@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: my_db
--- Waktu pembuatan: 13 Jun 2024 pada 17.38
--- Versi server: 11.4.2-MariaDB-ubu2404
--- Versi PHP: 8.2.8
+-- Host: 127.0.0.1
+-- Waktu pembuatan: 22 Jun 2024 pada 06.29
+-- Versi server: 10.4.32-MariaDB
+-- Versi PHP: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -24,6 +24,34 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Struktur dari tabel `calendar`
+--
+
+CREATE TABLE `calendar` (
+  `bulan` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data untuk tabel `calendar`
+--
+
+INSERT INTO `calendar` (`bulan`) VALUES
+(1),
+(2),
+(3),
+(4),
+(5),
+(6),
+(7),
+(8),
+(9),
+(10),
+(11),
+(12);
+
+-- --------------------------------------------------------
+
+--
 -- Struktur dari tabel `daftar_jasa`
 --
 
@@ -32,16 +60,14 @@ CREATE TABLE `daftar_jasa` (
   `nama_jasa` varchar(100) DEFAULT NULL,
   `harga_satuan` int(11) DEFAULT NULL,
   `is_active` int(11) DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data untuk tabel `daftar_jasa`
 --
 
 INSERT INTO `daftar_jasa` (`jasa_id`, `nama_jasa`, `harga_satuan`, `is_active`) VALUES
-(1, 'Laundry Reguler', 3500, 1),
-(2, 'Cuci Sepatu', 7000, 1),
-(3, 'Laundry Express', 5000, 1);
+(1, 'Laundry Reguler', 2500, 1);
 
 -- --------------------------------------------------------
 
@@ -56,16 +82,14 @@ CREATE TABLE `detail_pelanggan` (
   `alamat` text DEFAULT NULL,
   `jenis_kelamin` enum('Laki-laki','Perempuan') DEFAULT NULL,
   `no_hp` varchar(15) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data untuk tabel `detail_pelanggan`
 --
 
 INSERT INTO `detail_pelanggan` (`pelanggan_id`, `user_id`, `nama_pelanggan`, `alamat`, `jenis_kelamin`, `no_hp`) VALUES
-(1, 1, 'Kirigaya Kazuto', 'Sukoharjo', 'Laki-laki', '085283901234'),
-(2, 3, 'Yuki Asuna', 'Solo', 'Perempuan', '087526388912'),
-(3, 4, 'naufal amajid', 'asdlwkendlkansla', 'Laki-laki', '789789');
+(1, 2, 'first customer', 'hello world', 'Perempuan', '0812345678');
 
 -- --------------------------------------------------------
 
@@ -77,14 +101,14 @@ CREATE TABLE `detail_pemilik` (
   `pemilik_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `nama_pemilik` varchar(100) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data untuk tabel `detail_pemilik`
 --
 
 INSERT INTO `detail_pemilik` (`pemilik_id`, `user_id`, `nama_pemilik`) VALUES
-(1, 2, 'Kayaba Akihiko');
+(1, 1, 'super owner');
 
 -- --------------------------------------------------------
 
@@ -99,23 +123,7 @@ CREATE TABLE `detail_transaksi` (
   `jumlah` varchar(10) DEFAULT NULL,
   `status_transaksi` int(11) DEFAULT NULL,
   `created_at` datetime DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data untuk tabel `detail_transaksi`
---
-
-INSERT INTO `detail_transaksi` (`id`, `no_transaksi`, `jasa_id`, `jumlah`, `status_transaksi`, `created_at`) VALUES
-(1, '20240613213650', 1, '0.35', NULL, '2024-06-13 14:37:09'),
-(3, '20240613213650', 3, '1.7', NULL, '2024-06-13 14:37:20'),
-(6, '20240613225847', 3, '2.1', 1, '2024-06-13 15:59:09'),
-(7, '20240613231905', 2, '2.8', 1, '2024-06-13 23:19:17'),
-(8, '20240613231905', 1, '1', 1, '2024-06-13 23:19:59'),
-(9, '20240613232422', 3, '0.7', 1, '2024-06-13 23:26:05'),
-(10, '20240613232422', 2, '1', 1, '2024-06-13 23:26:15'),
-(11, '20240613233349', 1, '1', NULL, '2024-06-13 23:34:05'),
-(12, '20240613233424', 3, '2', 1, '2024-06-13 23:34:34'),
-(13, '20240613233424', 2, '3', 1, '2024-06-13 23:35:28');
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -127,7 +135,7 @@ CREATE TABLE `hak_akses` (
   `id` int(11) NOT NULL,
   `role_id` int(11) NOT NULL,
   `menu_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data untuk tabel `hak_akses`
@@ -153,7 +161,7 @@ CREATE TABLE `menu` (
   `nama_menu` varchar(20) DEFAULT NULL,
   `direktori` varchar(20) DEFAULT NULL,
   `icon` varchar(50) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data untuk tabel `menu`
@@ -179,14 +187,14 @@ CREATE TABLE `pengaturan` (
   `alamat` text DEFAULT NULL,
   `email` varchar(100) DEFAULT NULL,
   `no_telepon` varchar(20) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data untuk tabel `pengaturan`
 --
 
 INSERT INTO `pengaturan` (`id`, `nama_usaha`, `alamat`, `email`, `no_telepon`) VALUES
-(1, 'Teratai Laundry', 'Solo, Jawa Tengah', 'teratailaundry@gmail.com', '082312321');
+(1, 'Teratai Laundry Free', 'Solo, Jawa Tengah', 'teratailaundry@gmail.com', '082312321');
 
 -- --------------------------------------------------------
 
@@ -205,8 +213,10 @@ CREATE TABLE `riwayat_transaksi` (
   `nama_jasa` varchar(100) DEFAULT NULL,
   `harga_satuan` int(11) DEFAULT NULL,
   `jumlah` varchar(10) DEFAULT NULL,
-  `status_transaksi` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `status_transaksi` int(11) DEFAULT NULL,
+  `transaksi_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `transaksi_done` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -217,7 +227,7 @@ CREATE TABLE `riwayat_transaksi` (
 CREATE TABLE `role_user` (
   `role_id` int(11) NOT NULL,
   `nama_role` varchar(20) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data untuk tabel `role_user`
@@ -238,14 +248,15 @@ CREATE TABLE `submenu` (
   `nama_submenu` varchar(20) DEFAULT NULL,
   `menu_id` int(11) NOT NULL,
   `direktori` varchar(50) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data untuk tabel `submenu`
 --
 
 INSERT INTO `submenu` (`submenu_id`, `nama_submenu`, `menu_id`, `direktori`) VALUES
-(1, 'daftar jasa', 1, 'daftar_jasa');
+(1, 'daftar jasa', 1, 'daftar_jasa'),
+(2, 'daftar user', 1, 'daftar_user');
 
 -- --------------------------------------------------------
 
@@ -259,20 +270,7 @@ CREATE TABLE `transaksi` (
   `pemilik_id` int(11) NOT NULL,
   `created_at` datetime DEFAULT current_timestamp(),
   `status_transaksi` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data untuk tabel `transaksi`
---
-
-INSERT INTO `transaksi` (`no_transaksi`, `pelanggan_id`, `pemilik_id`, `created_at`, `status_transaksi`) VALUES
-('20240613213650', 1, 1, '2024-06-13 14:37:09', NULL),
-('20240613224409', 3, 1, '2024-06-13 15:50:50', NULL),
-('20240613225847', 2, 1, '2024-06-13 15:59:09', 1),
-('20240613231905', 1, 1, '2024-06-13 23:19:17', 1),
-('20240613232422', 2, 1, '2024-06-13 23:26:05', 1),
-('20240613233349', 3, 1, '2024-06-13 23:34:05', NULL),
-('20240613233424', 3, 1, '2024-06-13 23:34:34', 1);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -286,17 +284,15 @@ CREATE TABLE `user` (
   `password` text DEFAULT NULL,
   `role_id` int(11) NOT NULL,
   `is_active` int(11) DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data untuk tabel `user`
 --
 
 INSERT INTO `user` (`user_id`, `username`, `password`, `role_id`, `is_active`) VALUES
-(1, 'kirito', '202cb962ac59075b964b07152d234b70', 2, 1),
-(2, 'kayaba', '202cb962ac59075b964b07152d234b70', 1, 1),
-(3, 'asuna', '202cb962ac59075b964b07152d234b70', 2, 1),
-(4, 'naufal', '202cb962ac59075b964b07152d234b70', 2, 1);
+(1, 'owner', '202cb962ac59075b964b07152d234b70', 1, 1),
+(2, 'customer', '202cb962ac59075b964b07152d234b70', 2, 1);
 
 --
 -- Indexes for dumped tables
@@ -392,13 +388,13 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT untuk tabel `daftar_jasa`
 --
 ALTER TABLE `daftar_jasa`
-  MODIFY `jasa_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `jasa_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT untuk tabel `detail_pelanggan`
 --
 ALTER TABLE `detail_pelanggan`
-  MODIFY `pelanggan_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `pelanggan_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT untuk tabel `detail_pemilik`
@@ -410,7 +406,7 @@ ALTER TABLE `detail_pemilik`
 -- AUTO_INCREMENT untuk tabel `detail_transaksi`
 --
 ALTER TABLE `detail_transaksi`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT untuk tabel `hak_akses`
@@ -446,13 +442,13 @@ ALTER TABLE `role_user`
 -- AUTO_INCREMENT untuk tabel `submenu`
 --
 ALTER TABLE `submenu`
-  MODIFY `submenu_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `submenu_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT untuk tabel `user`
 --
 ALTER TABLE `user`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)
