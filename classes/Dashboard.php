@@ -87,7 +87,7 @@ class Dashboard
                     ON
                     c.bulan = MONTH(dt.created_at)
                     AND YEAR(dt.created_at) = :year
-                    AND dt.status_transaksi = 2
+                    AND dt.status_transaksi = 3
                 LEFT JOIN daftar_jasa dj ON
                     dt.jasa_id = dj.jasa_id
                 GROUP BY

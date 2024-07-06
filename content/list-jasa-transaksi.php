@@ -14,7 +14,13 @@ $totalAll = 0;
 
 <?php foreach ($trans as $tr) : ?>
     <tr>
-        <th><a href="javascript:;" class="text-danger" onclick="removeJasaTrans('<?= $tr['detail_id'] ?>')"><i class="bx bx-trash"></i></a></th>
+        <th>
+            <?php if ($tr['status_transaksi'] == 3) : ?>
+                <span class="text-success"><i class="bx bx-check-circle"></i></span>
+            <?php else : ?>
+                <a href="javascript:;" class="text-danger" onclick="removeJasaTrans('<?= $tr['detail_id'] ?>')"><i class="bx bx-trash"></i></a>
+            <?php endif; ?>
+        </th>
         <td><?= $tr['nama_jasa'] ?></td>
         <td align="center"><?= $func->currency($tr['harga_satuan']) ?></td>
         <td align="center"><?= $tr['jumlah'] ?> <?= $tr['satuan'] ?></td>

@@ -181,6 +181,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             'jumlah' => $_POST['quantity'],
             'created_at' => date('Y-m-d H:i:s')
         ];
+        if ($_POST['status'] != '' && $_POST['status'] != null) {
+            $dataTransaksi['status_transaksi'] = $_POST['status'];
+        }
         $addTransaksi = $transaksi->addTransaksi($dataTransaksi);
 
         if ($addTransaksi) {
@@ -284,7 +287,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 'no_transaksi' => $_POST['no_transaksi']
             ];
             $editStatus = [
-                'status_transaksi' => 2
+                'status_transaksi' => 3
             ];
             $editNoTrans = $transaksi->editTransaksi('transaksi', $editStatus, $where);
             $editDetailTrans = $transaksi->editTransaksi('detail_transaksi', $editStatus, $where);
@@ -306,6 +309,33 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 'icon' => 'bx bx-error-circle'
             ];
         }
+        echo json_encode($response);
+    }
+
+    if ($_POST['action'] == 'end_transaksi') {
+        $where = [
+            'no_transaksi' => $_POST['no_transaksi']
+        ];
+        $editStatus = [
+            'status_transaksi' => 2
+        ];
+        $editNoTrans = $transaksi->editTransaksi('transaksi', $editStatus, $where);
+        $editDetailTrans = $transaksi->editTransaksi('detail_transaksi', $editStatus, $where);
+
+        if ($editNoTrans > 0 && $editDetailTrans > 0) {
+            $response = [
+                'status' => 'success',
+                'msg' => 'Transaksi Selesai.',
+                'icon' => 'bx bx-check'
+            ];
+        } else {
+            $response = [
+                'status' => 'error',
+                'msg' => 'Transaksi Gagal Selesai.',
+                'icon' => 'bx bx-error-circle'
+            ];
+        }
+
         echo json_encode($response);
     }
 }

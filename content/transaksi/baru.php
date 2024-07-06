@@ -12,7 +12,11 @@ $desc = $trans->getDescriptionTrans($_GET['notrans']);
                 <?php if (is_null($desc['status_transaksi'])) : ?>
                     <small class="mb-0 text-primary"><i>Pending Transaction</i></small>
                 <?php else : ?>
-                    <small class="mb-0 text-success"><i>Processing Transaction</i></small>
+                    <?php if ($desc['status_transaksi'] == 2) : ?>
+                        <small class="mb-0 text-danger"><i>Finished Transaction</i></small>
+                    <?php elseif ($desc['status_transaksi'] == 1) : ?>
+                        <small class="mb-0 text-success"><i>Processing Transaction</i></small>
+                    <?php endif; ?>
                 <?php endif; ?>
             <?php else : ?>
                 <h5 class="mb-1"><?= $func->dateIndonesia(date('Y-m-d')) . ' ' . date('H:i') ?></h5>
@@ -85,24 +89,26 @@ $desc = $trans->getDescriptionTrans($_GET['notrans']);
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table class="table table-borderless mb-0">
-                                    <thead>
-                                        <td colspan="2">
-                                            <?php
-                                            require_once 'classes/Jasa.php';
-                                            $jasa = new Jasa();
-                                            ?>
-                                            <select name="jasa" id="jasa" class="select2 custom-border-bottom form-control" onchange="transOperation()">
-                                                <option value="">-- Pilih Jasa --</option>
-                                                <?php foreach ($jasa->getAllJasaTrans() as $jasa) : ?>
-                                                    <option value="<?= $jasa['jasa_id'] ?>" data-harga="<?= $jasa['harga_satuan'] ?>" data-satuan="<?= $jasa['satuan'] ?>"><?= ucwords($jasa['nama_jasa']) ?></option>
-                                                <?php endforeach; ?>
-                                            </select>
-                                        </td>
-                                        <td align="center" id="disHargaSatuan">0</td>
-                                        <td align="center"><input type="text" name="quantity" id="quantity" class="input-border-bottom-center" size="3" placeholder="..." onkeyup="transOperation(true)" autocomplete="off"><span id="satuan"></span></td>
-                                        <td align="center" id="disTotal">0</td>
-                                        <td align="center"><a href="javascript:;" class="text-primary d-none" id="btn-addTrans" onclick="addTransaksi()"><i class="bx bx-download fs-5"></i></a></td>
-                                    </thead>
+                                    <?php if ($desc['status_transaksi'] != 3) : ?>
+                                        <thead>
+                                            <td colspan="2">
+                                                <?php
+                                                require_once 'classes/Jasa.php';
+                                                $jasa = new Jasa();
+                                                ?>
+                                                <select name="jasa" id="jasa" class="select2 custom-border-bottom form-control" onchange="transOperation()">
+                                                    <option value="">-- Pilih Jasa --</option>
+                                                    <?php foreach ($jasa->getAllJasaTrans() as $jasa) : ?>
+                                                        <option value="<?= $jasa['jasa_id'] ?>" data-harga="<?= $jasa['harga_satuan'] ?>" data-satuan="<?= $jasa['satuan'] ?>"><?= ucwords($jasa['nama_jasa']) ?></option>
+                                                    <?php endforeach; ?>
+                                                </select>
+                                            </td>
+                                            <td align="center" id="disHargaSatuan">0</td>
+                                            <td align="center"><input type="text" name="quantity" id="quantity" class="input-border-bottom-center" size="3" placeholder="..." onkeyup="transOperation(true)" autocomplete="off"><span id="satuan"></span></td>
+                                            <td align="center" id="disTotal">0</td>
+                                            <td align="center"><a href="javascript:;" class="text-primary d-none" id="btn-addTrans" onclick="addTransaksi('<?= is_null($desc['status_transaksi']) ? NULL : $desc['status_transaksi'] ?>')"><i class="bx bx-download fs-5"></i></a></td>
+                                        </thead>
+                                    <?php endif; ?>
                                     <thead class="table-secondary">
                                         <tr>
                                             <th></th>
@@ -127,6 +133,11 @@ $desc = $trans->getDescriptionTrans($_GET['notrans']);
                                 <a href="javascript:;" onclick="changeStatusTrans()" class="btn btn-sm btn-secondary"><i class="bx bx-printer"></i> Cetak Nota</a>
                             <?php else : ?>
                                 <a href="javascript:;" onclick="printNota()" class="btn btn-sm btn-secondary"><i class="bx bx-printer"></i> Cetak Nota</a>
+                                <?php if ($desc['status_transaksi'] == 1) : ?>
+                                    <a href="javascript:;" onclick="endTransaksi('<?= $_GET['notrans'] ?>')" class="btn btn-sm btn-success"><i class="bx bx-check"></i> Selesai</a>
+                                <?php elseif ($desc['status_transaksi'] == 2) : ?>
+                                    <a href="javascript:;" onclick="takeCustomer('<?= $_GET['notrans'] ?>')" class="btn btn-sm btn-danger"><i class="bx bx-user-minus"></i> Ambil Pelanggan</a>
+                                <?php endif; ?>
                             <?php endif; ?>
                         <?php else : ?>
                             <a href="javascript:;" onclick="changeStatusTrans()" class="btn btn-sm btn-secondary"><i class="bx bx-printer"></i> Cetak Nota</a>
@@ -200,7 +211,7 @@ $desc = $trans->getDescriptionTrans($_GET['notrans']);
         })
     }
 
-    function addTransaksi() {
+    function addTransaksi(status) {
         let pemilik_id = $('#pemilik_id').val();
         let notrans = $('#notrans').val();
         let pelanggan_id = localStorage.getItem('pelanggan_id');
@@ -230,6 +241,7 @@ $desc = $trans->getDescriptionTrans($_GET['notrans']);
                 pelanggan_id: pelanggan_id,
                 jasa_id: jasa_id,
                 quantity: quantity,
+                status: status,
                 action: 'add_transaksi'
             },
             success: function(response) {
@@ -297,16 +309,81 @@ $desc = $trans->getDescriptionTrans($_GET['notrans']);
 
     function printNota() {
         let notrans = $('#notrans').val();
+        window.open(`printer/nota.php?notrans=${notrans}`, 'nota', 'width=800,height=600');
+    }
+
+    function endTransaksi(no_transaksi) {
         $.ajax({
             url: 'classes/Transaksi.php',
             type: 'POST',
             data: {
-                notrans: notrans,
-                action: 'change_status'
+                no_transaksi: no_transaksi,
+                action: 'end_transaksi'
             },
             success: function(response) {
-                window.open(`printer/nota.php?notrans=${notrans}`, 'nota', 'width=800,height=600');
+                let result = JSON.parse(response);
+                Lobibox.notify(`${result.status}`, {
+                    pauseDelayOnHover: true,
+                    size: "mini",
+                    rounded: true,
+                    delayIndicator: false,
+                    delay: 2000,
+                    icon: `${result.icon}`,
+                    continueDelayOnInactiveTab: false,
+                    sound: false,
+                    position: "top right",
+                    msg: result.msg,
+                });
+                if (result.status == 'success') {
+                    setTimeout(() => {
+                        location.reload()
+                    }, 2000);
+                }
             }
         })
+    }
+
+    function takeCustomer(no_transaksi) {
+        Swal.fire({
+            title: "Perhatian!",
+            text: "Transaksi yang sudah diambil customer tidak dapat diubah lagi, karena akan masuk ke laporan dan sebagai riwayat. Apakah anda yakin ingin menyelesaikan transaksi ini?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Ya!",
+            cancelButtonText: "Batal"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    type: 'POST',
+                    url: 'classes/Transaksi.php',
+                    data: {
+                        action: 'done_no_transaksi',
+                        no_transaksi: no_transaksi
+                    },
+                    success: function(response) {
+                        let res = JSON.parse(response);
+                        Lobibox.notify(`${res.status}`, {
+                            pauseDelayOnHover: true,
+                            size: "mini",
+                            rounded: true,
+                            delayIndicator: false,
+                            delay: 2500,
+                            icon: `${res.icon}`,
+                            continueDelayOnInactiveTab: false,
+                            sound: false,
+                            position: "center top",
+                            msg: `${res.msg}`
+                        });
+                        if (res.status == 'success') {
+                            setTimeout(() => {
+                                location.reload();
+                            }, 2500);
+                        }
+                    }
+                })
+            }
+        });
     }
 </script>

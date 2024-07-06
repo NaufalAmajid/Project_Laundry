@@ -102,46 +102,33 @@ $no = 1;
     }
 
     function doneTrans(no_transaksi) {
-        Swal.fire({
-            title: "Perhatian!",
-            text: "Transaksi yang sudah selesai tidak dapat diubah lagi, karena akan masuk ke laporan dan sebagai riwayat. Apakah anda yakin ingin menyelesaikan transaksi ini?",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Ya!",
-            cancelButtonText: "Batal"
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $.ajax({
-                    type: 'POST',
-                    url: 'classes/Transaksi.php',
-                    data: {
-                        action: 'done_no_transaksi',
-                        no_transaksi: no_transaksi
-                    },
-                    success: function(response) {
-                        let res = JSON.parse(response);
-                        Lobibox.notify(`${res.status}`, {
-                            pauseDelayOnHover: true,
-                            size: "mini",
-                            rounded: true,
-                            delayIndicator: false,
-                            delay: 2500,
-                            icon: `${res.icon}`,
-                            continueDelayOnInactiveTab: false,
-                            sound: false,
-                            position: "center top",
-                            msg: `${res.msg}`
-                        });
-                        if (res.status == 'success') {
-                            setTimeout(() => {
-                                location.reload();
-                            }, 2500);
-                        }
-                    }
-                })
+        $.ajax({
+            type: 'POST',
+            url: 'classes/Transaksi.php',
+            data: {
+                action: 'end_transaksi',
+                no_transaksi: no_transaksi
+            },
+            success: function(response) {
+                let res = JSON.parse(response);
+                Lobibox.notify(`${res.status}`, {
+                    pauseDelayOnHover: true,
+                    size: "mini",
+                    rounded: true,
+                    delayIndicator: false,
+                    delay: 2500,
+                    icon: `${res.icon}`,
+                    continueDelayOnInactiveTab: false,
+                    sound: false,
+                    position: "center top",
+                    msg: `${res.msg}`
+                });
+                if (res.status == 'success') {
+                    setTimeout(() => {
+                        location.reload();
+                    }, 2500);
+                }
             }
-        });
+        })
     }
 </script>

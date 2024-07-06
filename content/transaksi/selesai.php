@@ -1,5 +1,5 @@
 <?php
-$process = $trans->getTransaksiByStatus($_SESSION['the_id'], '= 2');
+$process = $trans->getTransaksiByStatus($_SESSION['the_id'], 'IN (2,3)');
 $no = 1;
 ?>
 <div class="card-header py-3">
@@ -36,7 +36,15 @@ $no = 1;
                                 <td><?= $func->dateIndonesia($proc['tgl_trans']) ?></td>
                                 <td align="center"><?= $proc['total_jasa'] ?></td>
                                 <td align="center">
-                                    <span class="badge bg-success" style="cursor: pointer;" onclick="detailTransDone('<?= $proc['no_transaksi'] ?>')">Transaksi Selesai</span>
+                                    <?php if ($proc['status_transaksi'] == 3) : ?>
+                                        <span class="badge bg-success" style="cursor: pointer;" onclick="detailTransDone('<?= $proc['no_transaksi'] ?>')">Transaksi Selesai</span>
+                                    <?php else : ?>
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-outline-primary" onclick="detailTrans('<?= $proc['no_transaksi'] ?>', '<?= $proc['pelanggan_id'] ?>')" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Edit Transaksi"><i class="bx bx-edit fs-4"></i></button>
+                                            <button type="button" class="btn btn-outline-success" onclick="doneTrans('<?= $proc['no_transaksi'] ?>')" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Ambil Customer"><i class="bx bx-user-minus fs-4"></i></button>
+                                            <button type="button" class="btn btn-outline-danger" onclick="removeNoTrans('<?= $proc['no_transaksi'] ?>')" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Hapus Transaksi"><i class="bx bx-x fs-4"></i></button>
+                                        </div>
+                                    <?php endif; ?>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
@@ -96,6 +104,50 @@ $no = 1;
                         setTimeout(() => {
                             location.reload();
                         }, 2500);
+                    }
+                })
+            }
+        });
+    }
+
+    function doneTrans(no_transaksi) {
+        Swal.fire({
+            title: "Perhatian!",
+            text: "Transaksi yang sudah diambil customer tidak dapat diubah lagi, karena akan masuk ke laporan dan sebagai riwayat. Apakah anda yakin ingin menyelesaikan transaksi ini?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Ya!",
+            cancelButtonText: "Batal"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    type: 'POST',
+                    url: 'classes/Transaksi.php',
+                    data: {
+                        action: 'done_no_transaksi',
+                        no_transaksi: no_transaksi
+                    },
+                    success: function(response) {
+                        let res = JSON.parse(response);
+                        Lobibox.notify(`${res.status}`, {
+                            pauseDelayOnHover: true,
+                            size: "mini",
+                            rounded: true,
+                            delayIndicator: false,
+                            delay: 2500,
+                            icon: `${res.icon}`,
+                            continueDelayOnInactiveTab: false,
+                            sound: false,
+                            position: "center top",
+                            msg: `${res.msg}`
+                        });
+                        if (res.status == 'success') {
+                            setTimeout(() => {
+                                location.reload();
+                            }, 2500);
+                        }
                     }
                 })
             }
