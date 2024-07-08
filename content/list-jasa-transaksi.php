@@ -40,7 +40,7 @@ $totalAll = 0;
 <script>
     function removeJasaTrans(detail_id) {
         $.ajax({
-            url: '../admin/classes/Transaksi.php',
+            url: 'classes/Transaksi.php',
             type: 'POST',
             data: {
                 action: 'remove_jasa_trans',
