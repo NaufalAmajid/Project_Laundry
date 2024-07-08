@@ -35,6 +35,10 @@
                     <input type="text" class="form-control form-control-lg" name="no_telepon" value="<?= $set['no_telepon'] ?>">
                 </div>
                 <div class="col-12">
+                    <label class="form-label">Pesan</label>
+                    <textarea class="form-control form-control-lg" name="pesan" rows="15"><?= $set['pesan'] ?></textarea>
+                </div>
+                <div class="col-12">
                     <div class="d-grid">
                         <button type="submit" class="btn btn-primary">Simpan</button>
                     </div>

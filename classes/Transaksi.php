@@ -155,11 +155,51 @@ class Transaksi
         $res = $db->delete($table, $where);
         return $res;
     }
+
+    public function sendWAMessage($data)
+    {
+        $querySetting = "SELECT * FROM pengaturan";
+        $stmt = $this->conn->prepare($querySetting);
+        $stmt->execute();
+        $setting = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        $detailTrans = $this->getTransaksiByNo($data['no_transaksi']);
+        $getItem     = '';
+        $total       = 0;
+        foreach ($detailTrans as $dt) {
+            $getItem .= $dt['nama_jasa'] . ' (' . $dt['jumlah'] . ' ' . $dt['satuan'] . ') : ' . number_format($dt['total'], 0, ',', '.') . '%0A';
+            $total += $dt['total'];
+        }
+        $total = number_format($total, 0, ',', '.');
+
+        // Check No HP
+        $noHp = $detailTrans[0]['no_hp'];
+        if (substr($noHp, 0, 1) == '0') {
+            $noHp = '62' . substr($noHp, 1);
+        } else if (substr($noHp, 0, 1) == '6' && substr($noHp, 1, 1) == '2') {
+            $noHp = $noHp;
+        } else {
+            $noHp = '62' . $noHp;
+        }
+
+        // Message
+        $msg = nl2br($setting['pesan']);
+        $msg = str_replace('<br />', '%0A', $msg);
+        $msg = str_replace(
+            ['[nama_cs]', '[no_transaksi]', '[item]', '[total]', '[nama_usaha]', '[nama_owner]'],
+            [ucwords($detailTrans[0]['nama_pelanggan']), $data['no_transaksi'], $getItem, $total, $setting['nama_usaha'], ucwords($data['nama_owner'])],
+            $msg
+        );
+        
+        $url = 'https://api.whatsapp.com/send?phone=' . $noHp . '&text=' . $msg;
+        return $url;
+    }
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     require_once '../config/connection.php';
     require_once '../classes/DB.php';
+    session_start();
 
     $transaksi = new Transaksi();
     if ($_POST['action'] == 'add_transaksi') {
@@ -323,10 +363,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $editDetailTrans = $transaksi->editTransaksi('detail_transaksi', $editStatus, $where);
 
         if ($editNoTrans > 0 && $editDetailTrans > 0) {
+            $dataSendWA = [
+                'no_transaksi' => $_POST['no_transaksi'],
+                'nama_owner' => $_SESSION['nama']
+            ];
+            $send = $transaksi->sendWAMessage($dataSendWA);
             $response = [
                 'status' => 'success',
                 'msg' => 'Transaksi Selesai.',
-                'icon' => 'bx bx-check'
+                'icon' => 'bx bx-check',
+                'url' => $send
             ];
         } else {
             $response = [

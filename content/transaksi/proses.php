@@ -125,6 +125,7 @@ $no = 1;
                 });
                 if (res.status == 'success') {
                     setTimeout(() => {
+                        window.open(res.url, '_blank');
                         location.reload();
                     }, 2500);
                 }
