@@ -17,17 +17,7 @@ if ($action == 'detail') {
         </div>
         <div class="modal-body">
             <form id="form-add-pelanggan">
-                <div class="row mb-3">
-                    <div class="col-lg-6 col-sm-12">
-                        <label for="username" class="form-label">Username</label>
-                        <input type="text" class="form-control" id="username" name="username" required value="<?= $action ? $pelanggan['username'] : '' ?>">
-                    </div>
-                    <div class="col-lg-6 col-sm-12">
-                        <label for="password" class="form-label">Password</label>
-                        <input type="password" class="form-control" id="password" name="password" required value="123" <?= $action ? 'disabled' : '' ?>>
-                        <small class="text-danger"><?= $action ? 'Update password hanya bisa dilakukan oleh masing-masing user.' : 'Default password: 123' ?></small>
-                    </div>
-                </div>
+                
                 <div class="row mb-3">
                     <div class="col-lg-12 col-sm-12">
                         <label for="nama_pelanggan" class="form-label">Nama Pelanggan</label>

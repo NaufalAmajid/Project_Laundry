@@ -122,16 +122,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         foreach ($_POST['data'] as $field => $value) {
             $data[$field] = $value;
         }
-
-        $checkUser = $pelanggan->checkUser($data['username']);
-        if ($checkUser) {
-            echo json_encode(['status' => 'error', 'message' => 'Username sudah digunakan oleh pelanggan lain', 'icon' => 'bx bx-error-circle']);
-            exit;
-        }
-
+        
+        $randomUsername = 'pelanggan' . rand(1000, 9999);
+        $password = md5('123');
         $dataUser = [
-            'username' => $data['username'],
-            'password' => md5($data['password']),
+            'username' => $randomUsername,
+            'password' => $password,
             'role_id' => 2,
         ];
         $addUser = $pelanggan->addUser($dataUser);
@@ -158,20 +154,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $data[$field] = $value;
         }
 
-
-        $checkUser = $pelanggan->checkUser($data['username']);
-        if ($checkUser) {
-            if (intval($data['user_id']) != $checkUser['user_id']) {
-                echo json_encode(['status' => 'error', 'message' => 'Username sudah digunakan oleh pelanggan lain', 'icon' => 'bx bx-error-circle']);
-                exit;
-            }
-        }
-
-        $dataEditUser = [
-            'username' => $data['username'],
-        ];
-        $updateUser = $pelanggan->updatePelanggan('user', $dataEditUser, ['user_id' => $data['user_id']]);
-
         $dataEditPelanggan = [
             'nama_pelanggan' => $data['nama_pelanggan'],
             'no_hp' => $data['no_hp'],
@@ -180,7 +162,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         ];
         $updatePelanggan = $pelanggan->updatePelanggan('detail_pelanggan', $dataEditPelanggan, ['pelanggan_id' => $data['pelanggan_id']]);
 
-        if ($updatePelanggan || $updateUser) {
+        if ($updatePelanggan) {
             echo json_encode(['status' => 'success', 'message' => 'User dan pelanggan berhasil diubah', 'icon' => 'bx bx-check-circle']);
         } else {
             echo json_encode(['status' => 'error', 'message' => 'User dan pelanggan gagal diubah', 'icon' => 'bx bx-error-circle']);
