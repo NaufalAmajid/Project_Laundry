@@ -336,6 +336,7 @@ $desc = $trans->getDescriptionTrans($_GET['notrans']);
                 });
                 if (result.status == 'success') {
                     setTimeout(() => {
+                        window.open(result.url, '_blank');
                         location.reload()
                     }, 2000);
                 }
